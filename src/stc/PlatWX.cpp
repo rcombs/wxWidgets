@@ -1614,41 +1614,51 @@ double ElapsedTime::Duration(bool reset) {
 
 #include "UniConversion.h"
 
-// Convert using Scintilla's functions instead of wx's, Scintilla's are more
-// forgiving and won't assert...
+wxString stc2wx(const char* str, size_t len) {
+    wxString converted;
+	if (!len)
+		return converted;
 
-wxString stc2wx(const char* str, size_t len)
-{
-    if (!len)
-        return wxEmptyString;
+#if SIZEOF_WCHAR_T == 2
+	// Use Scintilla's functions so that invalid UTF-8 produces garbage rather
+	// than an empty string
+	size_t wclen = UTF16Length(str, len);
+	wxWCharBuffer buffer(wclen + 1);
 
-    size_t wclen = UTF16Length(str, len);
-    wxWCharBuffer buffer(wclen+1);
+	size_t actualLen = UTF16FromUTF8(str, len, buffer.data(), wclen + 1);
+	converted.assign(buffer.data(), actualLen);
+#else
+    converted = wxString::FromUTF8(str, len);
+    if (!converted) {
+        // Mangle the string into being valid (but garbage) UTF-8
+        const unsigned char *ustr = reinterpret_cast<const unsigned char *>(str);
+        for (size_t i = 0; i < len; ++i) {
+            wxUint32 c = ustr[i];
+            size_t remaining = 0;
+            if (c >= 0xF0) {
+                remaining = 3;
+                c &= 0x07;
+            }
+            else if (c >= 0xE0) {
+                remaining = 2;
+                c &= 0x0F;
+            }
+            else if (c >= 0x80) {
+                remaining = 1;
+                c &= 0x1F;
+            }
 
-    size_t actualLen = UTF16FromUTF8(str, len, buffer.data(), wclen+1);
-    return wxString(buffer.data(), actualLen);
-}
+            for (; remaining > 0 && i + 1 < len; ++i, --remaining) {
+                // Specifically not verifying that trailing bytes are valid
+                c <<= 6;
+                c += ustr[i + 1] & 0x3F;
+            }
 
-
-
-wxString stc2wx(const char* str)
-{
-    return stc2wx(str, strlen(str));
-}
-
-
-wxWX2MBbuf wx2stc(const wxString& str)
-{
-    const wchar_t* wcstr = str.c_str();
-    size_t wclen         = str.length();
-    size_t len           = UTF8Length(wcstr, wclen);
-
-    wxCharBuffer buffer(len+1);
-    UTF8FromUTF16(wcstr, wclen, buffer.data(), len);
-
-    // TODO check NULL termination!!
-
-    return buffer;
+            converted += wxUniChar(c);
+        }
+    }
+#endif
+    return converted;
 }
 
 #endif
