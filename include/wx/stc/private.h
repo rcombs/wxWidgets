@@ -18,9 +18,13 @@
 
 #if wxUSE_UNICODE
 
-extern wxString stc2wx(const char* str);
-extern wxString stc2wx(const char* str, size_t len);
-extern wxCharBuffer wx2stc(const wxString& str);
+wxString stc2wx(const char* str, size_t len);
+inline wxString stc2wx(const char* str) {
+    return stc2wx(str, strlen(str));
+}
+inline wxCharBuffer wx2stc(const wxString& str) {
+    return str.utf8_str();
+}
 
 // This function takes both wxString and wxCharBuffer because it uses either
 // one or the other of them depending on the build mode. In Unicode it uses the
