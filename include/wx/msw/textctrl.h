@@ -167,6 +167,7 @@ public:
     void OnUpdateDelete(wxUpdateUIEvent& event);
     void OnUpdateSelectAll(wxUpdateUIEvent& event);
 
+#if wxUSE_RICHEDIT
     // Show a context menu for Rich Edit controls (the standard
     // EDIT control has one already)
     void OnContextMenu(wxContextMenuEvent& event);
@@ -175,6 +176,7 @@ public:
     // the control's lifetime or every time the menu is shown, depending on
     // implementation.
     virtual wxMenu *MSWCreateContextMenu();
+#endif
 
     // be sure the caret remains invisible if the user
     // called HideNativeCaret() before
