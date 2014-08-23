@@ -139,6 +139,8 @@ private:
     #include "wx/gtk1/slider.h"
 #elif defined(__WXMAC__)
     #include "wx/osx/slider.h"
+#elif defined(__WXCOCOA__)
+    #include "wx/cocoa/slider.h"
 #endif
 
 #endif // wxUSE_SLIDER

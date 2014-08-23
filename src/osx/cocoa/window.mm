@@ -1302,12 +1302,8 @@ void wxWidgetCocoaImpl::mouseEvent(WX_NSEvent event, WXWidget slf, void *_cmd)
             superimpl(slf, (SEL)_cmd, event);
             
             // super of built-ins keeps the mouse up, as wx expects this event, we have to synthesize it
-            // only trigger if at this moment the mouse is already up, and the control is still existing after the event has
-            // been handled (we do this by looking up the native NSView's peer from the hash map, that way we are sure the info
-            // is current - even when the instance memory of ourselves may have been freed ...
-            
-            wxWidgetCocoaImpl* impl = (wxWidgetCocoaImpl* ) wxWidgetImpl::FindFromWXWidget( slf );
-            if ( [ event type]  == NSLeftMouseDown && !wxGetMouseState().LeftIsDown() && impl != NULL )
+            // only trigger if at this moment the mouse is already up
+            if ( [ event type]  == NSLeftMouseDown && !wxGetMouseState().LeftIsDown() )
             {
                 wxMouseEvent wxevent(wxEVT_LEFT_DOWN);
                 SetupMouseEvent(wxevent , event) ;
@@ -1549,23 +1545,20 @@ void wxWidgetCocoaImpl::drawRect(void* rect, WXWidget slf, void *WXUNUSED(_cmd))
     wxRegion clearRgn;
     if ( tlwParent->GetWindowStyle() & wxFRAME_SHAPED )
     {
+        if ( isTopLevel )
+            clearRgn = updateRgn;
+
+        int xoffset = 0, yoffset = 0;
         wxRegion rgn = tlwParent->GetShape();
-        if ( rgn.IsOk() )
+        wxpeer->MacRootWindowToWindow( &xoffset, &yoffset );
+        rgn.Offset( xoffset, yoffset );
+        updateRgn.Intersect(rgn);
+
+        if ( isTopLevel )
         {
-            if ( isTopLevel )
-                clearRgn = updateRgn;
-
-            int xoffset = 0, yoffset = 0;
-            wxpeer->MacRootWindowToWindow( &xoffset, &yoffset );
-            rgn.Offset( xoffset, yoffset );
-            updateRgn.Intersect(rgn);
-
-            if ( isTopLevel )
-            {
-                // Exclude the window shape from the region to be cleared below.
-                rgn.Xor(wxpeer->GetSize());
-                clearRgn.Intersect(rgn);
-            }
+            // Exclude the window shape from the region to be cleared below.
+            rgn.Xor(wxpeer->GetSize());
+            clearRgn.Intersect(rgn);
         }
     }
     

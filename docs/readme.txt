@@ -45,15 +45,17 @@ Platforms supported
 
 wxWidgets currently supports the following primary platforms:
 
-- Windows XP, Vista, 7 and 8 (32/64 bits).
+- Windows 95/98/ME, NT, 2000, XP, Vista, 7 (32/64 bits).
 - Most Unix variants using the GTK+ toolkit (version 2.6 or newer)
-- Mac OS X (10.6 or newer) using Cocoa (32/64 bits) or Carbon (32 only)
+- Mac OS X (10.5 or newer) using Cocoa (32/64 bits) or Carbon (32 only)
 
 There is some support for the following platforms:
 
 - Most Unix variants with X11
 - Most Unix variants with Motif/Lesstif
 - Most Unix variants with GTK+ 1.2
+- OS/2
+- Windows CE (Pocket PC)
 
 Most popular C++ compilers are supported; see the install.txt
 file for each platform (available via docs/html/index.htm) and
@@ -149,7 +151,7 @@ Bug reporting
 
 The wxWidgets bug tracker can be browsed at:
 
-    http://trac.wxwidgets.org/newticket
+    http://trac.wxwidgets.org/report
 
 Please use the search function of our Trac installation to find
 any possibly relevant bugs before reporting new ones. Also please
@@ -167,7 +169,7 @@ Further information
 If you are looking for support, you can get it from
 
 - wxForum at http://forums.wxwidgets.org/
-- wx-users mailing list (http://www.wxwidgets.org/support/mailing-lists/)
+- wx-users mailing list (http://www.wxwidgets.org/support/maillst2.htm)
 - #wxwidgets IRC channel
 - http://stackoverflow.com/ if you tag your question with "wxwidgets"
 

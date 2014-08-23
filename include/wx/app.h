@@ -516,7 +516,7 @@ protected:
     wxDECLARE_NO_COPY_CLASS(wxAppConsoleBase);
 };
 
-#if defined(__UNIX__) && !defined(__WINDOWS__)
+#if defined(__UNIX__) && !defined(__WXMSW__)
     #include "wx/unix/app.h"
 #else
     // this has to be a class and not a typedef as we forward declare it
@@ -706,6 +706,8 @@ protected:
     #include "wx/x11/app.h"
 #elif defined(__WXMAC__)
     #include "wx/osx/app.h"
+#elif defined(__WXCOCOA__)
+    #include "wx/cocoa/app.h"
 #endif
 
 #else // !GUI

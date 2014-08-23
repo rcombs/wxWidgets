@@ -157,7 +157,7 @@ private:
     wxWindowID m_windowID;
     wxString m_pageTitle;
 
-    OSXWebViewPtr m_webView;
+    wxObjCID m_webView;
 
     // we may use this later to setup our own mouse events,
     // so leave it in for now.

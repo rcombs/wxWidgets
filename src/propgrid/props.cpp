@@ -1096,8 +1096,9 @@ bool wxBoolProperty::DoSetAttribute( const wxString& name, wxVariant& value )
 // wxEnumProperty
 // -----------------------------------------------------------------------
 
-WX_PG_IMPLEMENT_PROPERTY_CLASS(wxEnumProperty, wxPGProperty,
-                               long, const long*, Choice)
+IMPLEMENT_DYNAMIC_CLASS(wxEnumProperty, wxPGProperty)
+
+WX_PG_IMPLEMENT_PROPERTY_CLASS_PLAIN(wxEnumProperty,long,Choice)
 
 wxEnumProperty::wxEnumProperty( const wxString& label, const wxString& name, const wxChar* const* labels,
     const long* values, int value ) : wxPGProperty(label,name)
@@ -1159,8 +1160,6 @@ wxEnumProperty::wxEnumProperty( const wxString& label, const wxString& name,
     wxPGChoices& choices, int value )
     : wxPGProperty(label,name)
 {
-    SetIndex(0);
-
     m_choices.Assign( choices );
 
     if ( GetItemCount() )
@@ -1172,11 +1171,11 @@ int wxEnumProperty::GetIndexForValue( int value ) const
     if ( !m_choices.IsOk() )
         return -1;
 
-    const int intVal = m_choices.Index(value);
+    int intVal = m_choices.Index(value);
     if ( intVal >= 0 )
         return intVal;
 
-    return -1;
+    return value;
 }
 
 wxEnumProperty::~wxEnumProperty ()
@@ -1371,8 +1370,9 @@ int wxEnumProperty::GetIndex() const
 // wxEditEnumProperty
 // -----------------------------------------------------------------------
 
-WX_PG_IMPLEMENT_PROPERTY_CLASS(wxEditEnumProperty, wxPGProperty,
-                               wxString, const wxString&, ComboBox)
+IMPLEMENT_DYNAMIC_CLASS(wxEditEnumProperty, wxPGProperty)
+
+WX_PG_IMPLEMENT_PROPERTY_CLASS_PLAIN(wxEditEnumProperty,wxString,ComboBox)
 
 wxEditEnumProperty::wxEditEnumProperty( const wxString& label, const wxString& name, const wxChar* const* labels,
     const long* values, const wxString& value )
@@ -1410,8 +1410,9 @@ wxEditEnumProperty::~wxEditEnumProperty()
 // wxFlagsProperty
 // -----------------------------------------------------------------------
 
-WX_PG_IMPLEMENT_PROPERTY_CLASS(wxFlagsProperty, wxPGProperty,
-                               long, long, TextCtrl)
+IMPLEMENT_DYNAMIC_CLASS(wxFlagsProperty,wxPGProperty)
+
+WX_PG_IMPLEMENT_PROPERTY_CLASS_PLAIN(wxFlagsProperty,long,TextCtrl)
 
 void wxFlagsProperty::Init()
 {
@@ -1763,7 +1764,6 @@ wxDirProperty::wxDirProperty( const wxString& name, const wxString& label, const
   : wxLongStringProperty(name,label,value)
 {
     m_flags |= wxPG_PROP_NO_ESCAPE;
-    m_flags &= ~wxPG_PROP_ACTIVE_BTN; // Property button enabled only in not read-only mode.
 }
 
 wxDirProperty::~wxDirProperty() { }
@@ -2108,7 +2108,6 @@ WX_PG_IMPLEMENT_PROPERTY_CLASS(wxLongStringProperty,wxPGProperty,
 wxLongStringProperty::wxLongStringProperty( const wxString& label, const wxString& name,
     const wxString& value ) : wxPGProperty(label,name)
 {
-    m_flags |= wxPG_PROP_ACTIVE_BTN; // Property button always enabled.
     SetValue(value);
 }
 
@@ -2177,18 +2176,14 @@ bool wxLongStringProperty::DisplayEditorDialog( wxPGProperty* prop, wxPropertyGr
 #endif
     wxBoxSizer* topsizer = new wxBoxSizer( wxVERTICAL );
     wxBoxSizer* rowsizer = new wxBoxSizer( wxHORIZONTAL );
-    long edStyle = wxTE_MULTILINE;
-    if ( prop->HasFlag(wxPG_PROP_READONLY) )
-        edStyle |= wxTE_READONLY;
-    wxTextCtrl* ed = new wxTextCtrl(dlg,wxID_ANY,value,
-        wxDefaultPosition,wxDefaultSize,edStyle);
+    wxTextCtrl* ed = new wxTextCtrl(dlg,11,value,
+        wxDefaultPosition,wxDefaultSize,wxTE_MULTILINE);
 
     rowsizer->Add( ed, 1, wxEXPAND|wxALL, spacing );
     topsizer->Add( rowsizer, 1, wxEXPAND, 0 );
 
     wxStdDialogButtonSizer* buttonSizer = new wxStdDialogButtonSizer();
-    if ( !prop->HasFlag(wxPG_PROP_READONLY) )
-        buttonSizer->AddButton(new wxButton(dlg, wxID_OK));
+    buttonSizer->AddButton(new wxButton(dlg, wxID_OK));
     buttonSizer->AddButton(new wxButton(dlg, wxID_CANCEL));
     buttonSizer->Realize();
     topsizer->Add( buttonSizer, 0,
@@ -2869,7 +2864,7 @@ bool wxPGInDialogValidator::DoValidate( wxPropertyGrid* propGrid,
     if ( !tc )
     {
         {
-            tc = new wxTextCtrl( propGrid, wxID_ANY, wxEmptyString,
+            tc = new wxTextCtrl( propGrid, wxPG_SUBID_TEMP1, wxEmptyString,
                                  wxPoint(30000,30000));
             tc->Hide();
         }

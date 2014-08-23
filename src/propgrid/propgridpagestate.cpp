@@ -286,33 +286,18 @@ void wxPropertyGridPageState::DoClear()
         m_selection.clear();
     }
 
-    // If handling wxPG event then every property item must be
-    // deleted individually (and with deferral).
-    if ( m_pPropGrid && m_pPropGrid->m_processedEvent )
-    {
-        wxPropertyGridIterator it;
-        for ( it = m_pPropGrid->GetIterator(wxPG_ITERATE_ALL);
-              !it.AtEnd();
-              it++ )
-        {
-            DoDelete(*it, true);
-        }
-    }
-    else
-    {
-        m_regularArray.Empty();
-        if ( m_abcArray )
-            m_abcArray->Empty();
+    m_regularArray.Empty();
+    if ( m_abcArray )
+        m_abcArray->Empty();
 
-        m_dictName.clear();
+    m_dictName.clear();
 
-        m_currentCategory = NULL;
-        m_lastCaptionBottomnest = 1;
-        m_itemsAdded = 0;
+    m_currentCategory = NULL;
+    m_lastCaptionBottomnest = 1;
+    m_itemsAdded = 0;
 
-        m_virtualHeight = 0;
-        m_vhCalcPending = 0;
-    }
+    m_virtualHeight = 0;
+    m_vhCalcPending = 0;
 }
 
 // -----------------------------------------------------------------------
@@ -444,23 +429,15 @@ wxPropertyCategory* wxPropertyGridPageState::GetPropertyCategory( const wxPGProp
 // wxPropertyGridPageState GetPropertyXXX methods
 // -----------------------------------------------------------------------
 
-#ifdef WXWIN_COMPATIBILITY_3_0
-wxPGProperty* wxPropertyGridPageState::GetPropertyByLabel
-                        ( const wxString& label, wxPGProperty* parent ) const
+wxPGProperty* wxPropertyGridPageState::GetPropertyByLabel( const wxString& label,
+                                                           wxPGProperty* parent ) const
 {
-    return BaseGetPropertyByLabel(label, parent);
-}
-#endif // WXWIN_COMPATIBILITY_3_0
 
-wxPGProperty* wxPropertyGridPageState::BaseGetPropertyByLabel
-                        ( const wxString& label, wxPGProperty* parent ) const
-{
-    if ( !parent )
-    {
-        parent = (wxPGProperty*) &m_regularArray;
-    }
+    size_t i;
 
-    for ( size_t i=0; i<parent->GetChildCount(); i++ )
+    if ( !parent ) parent = (wxPGProperty*) &m_regularArray;
+
+    for ( i=0; i<parent->GetChildCount(); i++ )
     {
         wxPGProperty* p = parent->Item(i);
         if ( p->m_label == label )
@@ -468,7 +445,7 @@ wxPGProperty* wxPropertyGridPageState::BaseGetPropertyByLabel
         // Check children recursively.
         if ( p->GetChildCount() )
         {
-            p = BaseGetPropertyByLabel(label, p);
+            p = GetPropertyByLabel(label,(wxPGProperty*)p);
             if ( p )
                 return p;
         }
@@ -1853,21 +1830,10 @@ void wxPropertyGridPageState::DoDelete( wxPGProperty* item, bool doDelete )
     // Must defer deletion? Yes, if handling a wxPG event.
     if ( pg && pg->m_processedEvent )
     {
-        // Prevent adding duplicates to the lists.
         if ( doDelete )
-        {
-            if ( pg->m_deletedProperties.Index(item) == wxNOT_FOUND )
-            {
-                pg->m_deletedProperties.push_back(item);
-            }
-        }
+            pg->m_deletedProperties.push_back(item);
         else
-        {
-            if ( pg->m_removedProperties.Index(item) == wxNOT_FOUND )
-            {
-                pg->m_removedProperties.push_back(item);
-            }
-        }
+            pg->m_removedProperties.push_back(item);
 
         // Rename the property so it won't remain in the way
         // of the user code.
@@ -1987,40 +1953,9 @@ void wxPropertyGridPageState::DoDelete( wxPGProperty* item, bool doDelete )
 
     // We can actually delete it now
     if ( doDelete )
-    {
-        // Remove the item from both lists of pending operations.
-        // (Deleted item cannot be also the subject of further removal.)
-        int index = pg->m_deletedProperties.Index(item);
-        if ( index != wxNOT_FOUND )
-        {
-            pg->m_deletedProperties.RemoveAt(index);
-        }
-        wxASSERT_MSG( pg->m_deletedProperties.Index(item) == wxNOT_FOUND,
-                    wxT("Too many occurences of the item"));
-
-        index = pg->m_removedProperties.Index(item);
-        if ( index != wxNOT_FOUND )
-        {
-            pg->m_removedProperties.RemoveAt(index);
-        }
-        wxASSERT_MSG( pg->m_removedProperties.Index(item) == wxNOT_FOUND,
-                    wxT("Too many occurences of the item"));
-
         delete item;
-    }
     else
-    {
-        // Remove the item from the list of pending removals.
-        int index = pg->m_removedProperties.Index(item);
-        if ( index != wxNOT_FOUND )
-        {
-            pg->m_removedProperties.RemoveAt(index);
-        }
-        wxASSERT_MSG( pg->m_removedProperties.Index(item) == wxNOT_FOUND,
-                    wxT("Too many occurences of the item"));
-
         item->OnDetached(this, pg);
-    }
 
     m_itemsAdded = 1; // Not a logical assignment (but required nonetheless).
 

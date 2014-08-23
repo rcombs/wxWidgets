@@ -86,6 +86,8 @@ protected:
     #include "wx/gtk1/spinbutt.h"
 #elif defined(__WXMAC__)
     #include "wx/osx/spinbutt.h"
+#elif defined(__WXCOCOA__)
+    #include "wx/cocoa/spinbutt.h"
 #endif
 
 // ----------------------------------------------------------------------------

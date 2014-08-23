@@ -26,10 +26,7 @@
     #include "wx/math.h"
 #endif
 
-#ifndef _FORCENAMELESSUNION
-    #define _FORCENAMELESSUNION
-#endif
-
+#define _FORCENAMELESSUNION
 #include "wx/msw/private.h"
 #include "wx/msw/ole/oleutils.h"
 #include "wx/msw/ole/automtn.h"

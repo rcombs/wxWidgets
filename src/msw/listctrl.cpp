@@ -727,11 +727,7 @@ bool wxListCtrl::GetItem(wxListItem& info) const
     lvItem.iItem = info.m_itemId;
     lvItem.iSubItem = info.m_col;
 
-    // If no mask is specified, get everything: this is compatible with the
-    // generic version and conforms to the principle of least surprise.
-    const long mask = info.m_mask ? info.m_mask : -1;
-
-    if ( mask & wxLIST_MASK_TEXT )
+    if ( info.m_mask & wxLIST_MASK_TEXT )
     {
         lvItem.mask |= LVIF_TEXT;
         lvItem.pszText = new wxChar[513];
@@ -742,13 +738,13 @@ bool wxListCtrl::GetItem(wxListItem& info) const
         lvItem.pszText = NULL;
     }
 
-    if ( mask & wxLIST_MASK_DATA )
+    if (info.m_mask & wxLIST_MASK_DATA)
         lvItem.mask |= LVIF_PARAM;
 
-    if ( mask & wxLIST_MASK_IMAGE )
+    if (info.m_mask & wxLIST_MASK_IMAGE)
         lvItem.mask |= LVIF_IMAGE;
 
-    if ( mask & wxLIST_MASK_STATE )
+    if ( info.m_mask & wxLIST_MASK_STATE )
     {
         lvItem.mask |= LVIF_STATE;
         wxConvertToMSWFlags(0, info.m_stateMask, lvItem);

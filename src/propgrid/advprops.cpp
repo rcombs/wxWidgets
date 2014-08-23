@@ -271,7 +271,7 @@ wxPGWindowList wxPGSpinCtrlEditor::CreateControls( wxPropertyGrid* propgrid, wxP
 #ifdef __WXMSW__
     wnd2->Hide();
 #endif
-    wnd2->Create( propgrid->GetPanel(), wxID_ANY, butPos, butSz, wxSP_VERTICAL );
+    wnd2->Create( propgrid->GetPanel(), wxPG_SUBID2, butPos, butSz, wxSP_VERTICAL );
 
     wnd2->SetRange( INT_MIN, INT_MAX );
     wnd2->SetValue( 0 );
@@ -487,7 +487,7 @@ wxPGWindowList wxPGDatePickerCtrlEditor::CreateControls( wxPropertyGrid* propgri
         dateValue = value.GetDateTime();
 
     ctrl->Create(propgrid->GetPanel(),
-                 wxID_ANY,
+                 wxPG_SUBID1,
                  dateValue,
                  pos,
                  useSz,
@@ -1262,20 +1262,14 @@ bool wxSystemColourProperty::QueryColourFromUser( wxVariant& variant ) const
 }
 
 
-bool wxSystemColourProperty::IntToValue( wxVariant& variant, int number, int argFlags ) const
+bool wxSystemColourProperty::IntToValue( wxVariant& variant, int number, int WXUNUSED(argFlags) ) const
 {
     int index = number;
     int type = m_choices.GetValue(index);
 
-    if ( m_choices.GetLabel(index) == _("Custom") )
+    if ( type == wxPG_COLOUR_CUSTOM )
     {
-         if ( !(argFlags & wxPG_PROPERTY_SPECIFIC) )
-            return QueryColourFromUser(variant);
-
-         // Call from event handler.
-         // User will be asked for custom color later on in OnEvent().
-         wxColourPropertyValue val = GetVal();
-         variant = DoTranslateVal(val);
+        QueryColourFromUser(variant);
     }
     else
     {
@@ -1454,18 +1448,7 @@ bool wxSystemColourProperty::StringToValue( wxVariant& value, const wxString& te
             return false;
         }
 
-        if ( (argFlags & wxPG_PROPERTY_SPECIFIC) )
-        {
-            // Query for value from the event handler.
-            // User will be asked for custom color later on in OnEvent().
-            ResetNextIndex();
-            return false;
-        }
-        if ( !QueryColourFromUser(value) )
-        {
-            ResetNextIndex();
-            return false;
-        }
+        QueryColourFromUser(value);
     }
     else
     {
@@ -1541,46 +1524,28 @@ bool wxSystemColourProperty::DoSetAttribute( const wxString& name, wxVariant& va
 
 static const char* const gs_cp_es_normcolour_labels[] = {
     wxTRANSLATE("Black"),
-    wxTRANSLATE("Maroon"),
-    wxTRANSLATE("Navy"),
-    wxTRANSLATE("Purple"),
-    wxTRANSLATE("Teal"),
-    wxTRANSLATE("Gray"),
-    wxTRANSLATE("Green"),
-    wxTRANSLATE("Olive"),
-    wxTRANSLATE("Brown"),
-    wxTRANSLATE("Blue"),
-    wxTRANSLATE("Fuchsia"),
     wxTRANSLATE("Red"),
-    wxTRANSLATE("Orange"),
-    wxTRANSLATE("Silver"),
-    wxTRANSLATE("Lime"),
-    wxTRANSLATE("Aqua"),
+    wxTRANSLATE("Green"),
+    wxTRANSLATE("Blue"),
+    wxTRANSLATE("Cyan"),
+    wxTRANSLATE("Magenta"),
     wxTRANSLATE("Yellow"),
     wxTRANSLATE("White"),
+    wxTRANSLATE("Grey"),
     wxTRANSLATE("Custom"),
     NULL
 };
 
 static const unsigned long gs_cp_es_normcolour_colours[] = {
     wxPG_COLOUR(0,0,0),
-    wxPG_COLOUR(128,0,0),
-    wxPG_COLOUR(0,0,128),
-    wxPG_COLOUR(128,0,128),
-    wxPG_COLOUR(0,128,128),
-    wxPG_COLOUR(128,128,128),
-    wxPG_COLOUR(0,128,0),
-    wxPG_COLOUR(128,128,0),
-    wxPG_COLOUR(166,124,81),
-    wxPG_COLOUR(0,0,255),
-    wxPG_COLOUR(255,0,255),
     wxPG_COLOUR(255,0,0),
-    wxPG_COLOUR(247,148,28),
-    wxPG_COLOUR(192,192,192),
     wxPG_COLOUR(0,255,0),
+    wxPG_COLOUR(0,0,255),
     wxPG_COLOUR(0,255,255),
+    wxPG_COLOUR(255,0,255),
     wxPG_COLOUR(255,255,0),
     wxPG_COLOUR(255,255,255),
+    wxPG_COLOUR(128,128,128),
     wxPG_COLOUR(0,0,0)
 };
 
@@ -1596,24 +1561,6 @@ wxColourProperty::wxColourProperty( const wxString& label,
                              NULL,
                              &gs_wxColourProperty_choicesCache, value )
 {
-    wxASSERT_MSG( wxTheColourDatabase, wxT("No colour database") );
-    if ( wxTheColourDatabase )
-    {
-        // Extend colour database with custom PG colours.
-        const char* const* colourLabels = gs_cp_es_normcolour_labels;
-        for ( int i = 0; *colourLabels; colourLabels++, i++ )
-        {
-            wxColour clr = wxTheColourDatabase->Find(*colourLabels);
-            // Use standard wx colour value if its label was found,
-            // otherwise register custom PG colour.
-            if ( !clr.IsOk() )
-            {
-                clr.Set(gs_cp_es_normcolour_colours[i]);
-                wxTheColourDatabase->AddColour(*colourLabels, clr);
-            }
-        }
-    }
-
     Init( value );
 
     m_flags |= wxPG_PROP_TRANSLATE_CUSTOM;
@@ -1650,7 +1597,7 @@ wxString wxColourProperty::ValueToString( wxVariant& value,
 
 wxColour wxColourProperty::GetColour( int index ) const
 {
-    return wxColour(gs_cp_es_normcolour_labels[m_choices.GetValue(index)]);
+    return gs_cp_es_normcolour_colours[m_choices.GetValue(index)];
 }
 
 wxVariant wxColourProperty::DoTranslateVal( wxColourPropertyValue& v ) const

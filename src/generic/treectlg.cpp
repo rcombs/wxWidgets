@@ -458,13 +458,6 @@ wxTreeTextCtrl::wxTreeTextCtrl(wxGenericTreeCtrl *owner,
 
 void wxTreeTextCtrl::EndEdit(bool discardChanges)
 {
-    if ( m_aboutToFinish )
-    {
-        // We already called Finish which cannot be called
-        // more than once.
-        return;
-    }
-
     m_aboutToFinish = true;
 
     if ( discardChanges )
@@ -562,7 +555,6 @@ void wxTreeTextCtrl::OnKillFocus( wxFocusEvent &event )
 {
     if ( !m_aboutToFinish )
     {
-        m_aboutToFinish = true;
         if ( !AcceptChanges() )
             m_owner->OnRenameCancelled( m_itemEdited );
 
@@ -1314,10 +1306,6 @@ bool wxGenericTreeCtrl::SetFont( const wxFont &font )
 bool wxGenericTreeCtrl::IsVisible(const wxTreeItemId& item) const
 {
     wxCHECK_MSG( item.IsOk(), false, wxT("invalid tree item") );
-
-    // Hidden root item is never visible.
-    if ( item == GetRootItem() && HasFlag(wxTR_HIDE_ROOT) )
-        return false;
 
     // An item is only visible if it's not a descendant of a collapsed item
     wxGenericTreeItem *pItem = (wxGenericTreeItem*) item.m_pItem;
@@ -3514,10 +3502,9 @@ wxTextCtrl* wxGenericTreeCtrl::GetEditControl() const
 void wxGenericTreeCtrl::EndEditLabel(const wxTreeItemId& WXUNUSED(item),
                                      bool discardChanges)
 {
-    if (m_textCtrl)
-    {
-        m_textCtrl->EndEdit(discardChanges);
-    }
+    wxCHECK_RET( m_textCtrl, wxT("not editing label") );
+
+    m_textCtrl->EndEdit(discardChanges);
 }
 
 bool wxGenericTreeCtrl::OnRenameAccept(wxGenericTreeItem *item,

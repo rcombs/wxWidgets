@@ -1264,9 +1264,10 @@ void wxToolBar::SetToolBitmapSize(const wxSize& size)
     {
         int maxs = wxMax( size.x, size.y );
         NSToolbarSizeMode sizeSpec;
-
-        if ( maxs > 24 )
+        if ( maxs > 32 )
             sizeSpec = NSToolbarSizeModeRegular;
+        else if ( maxs > 24 )
+            sizeSpec = NSToolbarSizeModeDefault;
         else
             sizeSpec = NSToolbarSizeModeSmall;
 

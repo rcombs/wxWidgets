@@ -35,6 +35,10 @@ IMPLEMENT_DYNAMIC_CLASS(wxMask, wxObject)
 #include "wx/osx/private.h"
 #endif
 
+#ifndef __WXOSX_IPHONE__
+#include <QuickTime/QuickTime.h>
+#endif
+
 CGColorSpaceRef wxMacGetGenericRGBColorSpace();
 CGDataProviderRef wxMacCGDataProviderCreateWithMemoryBuffer( const wxMemoryBuffer& buf );
 
@@ -1317,7 +1321,7 @@ wxBitmap::wxBitmap(const wxImage& image, int depth, double scale)
             UseAlpha() ;
 
         unsigned char* destinationstart = (unsigned char*) BeginRawAccess() ;
-        unsigned char* data = image.GetData();
+        register unsigned char* data = image.GetData();
         if ( destinationstart != NULL && data != NULL )
         {
             const unsigned char *alpha = hasAlpha ? image.GetAlpha() : NULL ;

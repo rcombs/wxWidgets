@@ -190,7 +190,7 @@ bool wxListBox::Create(wxWindow *parent,
         return false;
 
     if ( IsSorted() )
-        m_strings.sorted = new wxSortedArrayString(wxDictionaryStringSortAscending);
+        m_strings.sorted = new wxSortedArrayString;
     else
         m_strings.unsorted = new wxArrayString;
 

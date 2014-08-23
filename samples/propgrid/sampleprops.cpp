@@ -59,15 +59,13 @@ wxFontDataProperty::wxFontDataProperty( const wxString& label, const wxString& n
     wxFontData fontData(value);
 
     // Fix value.
-    wxFont font;
-    font << m_value;  // Get font data from base object.
-    fontData.SetChosenFont(font);
+    fontData.SetChosenFont(value.GetInitialFont());
     if ( !fontData.GetColour().IsOk() )
         fontData.SetColour(*wxBLACK);
 
     // Set initial value - should be done in a simpler way like this
     // (instead of calling SetValue) in derived (wxObject) properties.
-    m_value_wxFontData << fontData;
+    m_value_wxFontData << value;
 
     // Add extra children.
     AddPrivateChild( new wxColourProperty(_("Colour"), wxPG_LABEL,
@@ -182,7 +180,7 @@ wxVariant wxFontDataProperty::ChildChanged( wxVariant& thisValue,
             // Transfer from subset to superset.
             wxFont font = fontData.GetChosenFont();
             variant = WXVARIANT(font);
-            variant = wxFontProperty::ChildChanged( variant, childIndex, childValue );
+            wxFontProperty::ChildChanged( variant, childIndex, childValue );
             font << variant;
             fontData.SetChosenFont(font);
     }

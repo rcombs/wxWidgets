@@ -89,7 +89,7 @@ WXGLPixelFormat WXGLChoosePixelFormat(const int *attribList)
         NSOpenGLPFAAlphaSize,(NSOpenGLPixelFormatAttribute)0,
         NSOpenGLPFADepthSize,(NSOpenGLPixelFormatAttribute)8,
         NSOpenGLPFAAccelerated, // use hardware accelerated context
-        0
+        (NSOpenGLPixelFormatAttribute)nil
     };
 
     const NSOpenGLPixelFormatAttribute *attribs;
@@ -213,19 +213,10 @@ WXGLPixelFormat WXGLChoosePixelFormat(const int *attribList)
                     data[p++] = NSOpenGLPFASamples;
                     data[p++] = (NSOpenGLPixelFormatAttribute) attribList[arg++];
                     break;
-
-                case WX_GL_CORE_PROFILE:
-                    data[p++] = NSOpenGLPFAOpenGLProfile;
-                    // request an OpenGL core profile
-                    // will use the highest available OpenGL version
-                    // which will be at least 3.2
-                    data[p++] = NSOpenGLProfileVersion3_2Core;
-
-                    break;
             }
         }
 
-        data[p] = 0;
+        data[p] = (NSOpenGLPixelFormatAttribute)nil;
 
         attribs = data;
     }

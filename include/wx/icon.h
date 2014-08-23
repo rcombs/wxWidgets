@@ -52,6 +52,9 @@
   #define wxICON_DEFAULT_TYPE   wxBITMAP_TYPE_PNG_RESOURCE
   #include "wx/generic/icon.h"
 #endif
+#elif defined(__WXCOCOA__)
+  #define wxICON_DEFAULT_TYPE   wxBITMAP_TYPE_ICON_RESOURCE
+  #include "wx/cocoa/icon.h"
 #endif
 
 //-----------------------------------------------------------------------------

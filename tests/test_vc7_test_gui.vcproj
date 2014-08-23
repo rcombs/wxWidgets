@@ -317,9 +317,6 @@
 				RelativePath=".\controls\bookctrlbasetest.cpp">
 			</File>
 			<File
-				RelativePath=".\graphics\boundingbox.cpp">
-			</File>
-			<File
 				RelativePath=".\sizers\boxsizer.cpp">
 			</File>
 			<File

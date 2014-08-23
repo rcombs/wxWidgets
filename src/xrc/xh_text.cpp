@@ -69,10 +69,6 @@ wxObject *wxTextCtrlXmlHandler::DoCreateResource()
     if (HasParam(wxT("maxlength")))
         text->SetMaxLength(GetLong(wxT("maxlength")));
 
-    const wxString hint = GetText(wxS("hint"));
-    if (!hint.empty())
-        text->SetHint(hint);
-
     return text;
 }
 

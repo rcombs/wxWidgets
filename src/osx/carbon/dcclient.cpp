@@ -174,7 +174,7 @@ wxClientDCImpl::wxClientDCImpl( wxDC *owner, wxWindow *window ) :
 
 wxClientDCImpl::~wxClientDCImpl()
 {
-    if( GetGraphicsContext() && GetGraphicsContext()->GetNativeContext() && !m_release )
+    if( GetGraphicsContext() && GetGraphicsContext()->GetNativeContext() )
         Flush();
 }
 

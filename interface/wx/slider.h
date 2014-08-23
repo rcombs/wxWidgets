@@ -30,10 +30,7 @@
 
     On Windows, the track bar control is used.
 
-    Slider generates the same events as wxScrollBar but in practice the most
-    convenient way to process wxSlider updates is by handling the
-    slider-specific @c wxEVT_SLIDER event which carries wxCommandEvent
-    containing just the latest slider position.
+    Slider events are handled in the same way as a scrollbar.
 
     @beginStyleTable
     @style{wxSL_HORIZONTAL}
@@ -121,8 +118,6 @@
     @event{EVT_SLIDER(id, func)}
         Process @c wxEVT_SLIDER which is generated after any
         change of wxSlider position in addition to one of the events above.
-        Notice that the handler of this event receives a wxCommandEvent as
-        argument and not wxScrollEvent, as all the other handlers.
     @endEventTable
 
     @section slider_diff The difference between EVT_SCROLL_THUMBRELEASE and EVT_SCROLL_CHANGED

@@ -149,8 +149,7 @@ public:
             {
                 // cache the face name, it shouldn't change unless the family
                 // does and wxNativeFontInfo::SetFamily() resets the face name
-                // Don't call this->SetFaceName(), because it deletes the HFONT.
-                const_cast<wxNativeFontInfo &>(m_nativeFontInfo).SetFaceName(facename);
+                const_cast<wxFontRefData *>(this)->SetFaceName(facename);
             }
         }
 

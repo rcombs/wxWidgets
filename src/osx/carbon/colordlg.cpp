@@ -16,7 +16,7 @@
 #include "wx/modalhook.h"
 
 
-#if !USE_NATIVE_FONT_DIALOG_FOR_MACOSX && wxUSE_COLOURDLG
+#if !USE_NATIVE_FONT_DIALOG_FOR_MACOSX
 
 IMPLEMENT_DYNAMIC_CLASS(wxColourDialog, wxDialog)
 

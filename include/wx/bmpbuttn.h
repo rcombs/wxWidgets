@@ -123,6 +123,8 @@ protected:
     #include "wx/gtk1/bmpbuttn.h"
 #elif defined(__WXMAC__)
     #include "wx/osx/bmpbuttn.h"
+#elif defined(__WXCOCOA__)
+    #include "wx/cocoa/bmpbuttn.h"
 #endif
 
 #endif // wxUSE_BMPBUTTON

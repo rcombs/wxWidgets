@@ -677,11 +677,14 @@ void wxMenuItem::SetItemLabel(const wxString& txt)
     m_parentMenu->UpdateAccel(this);
 #endif // wxUSE_ACCEL
 
-    const int itemPos = MSGetMenuItemPos();
-    if ( itemPos == -1 )
+    const UINT id = GetMSWId();
+    HMENU hMenu = GetHMenuOf(m_parentMenu);
+    if ( !hMenu )
         return;
 
-    HMENU hMenu = GetHMenuOf(m_parentMenu);
+    const UINT state = ::GetMenuState(hMenu, id, MF_BYCOMMAND);
+    if ( state == (UINT)-1 )
+        return;
 
     // update the text of the native menu item
     WinStruct<MENUITEMINFO> info;
@@ -696,7 +699,7 @@ void wxMenuItem::SetItemLabel(const wxString& txt)
                  MIIM_DATA |
                  MIIM_BITMAP |
                  MIIM_FTYPE;
-    if ( !::GetMenuItemInfo(hMenu, itemPos, TRUE, &info) )
+    if ( !::GetMenuItemInfo(hMenu, id, FALSE, &info) )
     {
         wxLogLastError(wxT("GetMenuItemInfo"));
         return;
@@ -716,7 +719,7 @@ void wxMenuItem::SetItemLabel(const wxString& txt)
     // Also notice that we shouldn't use our IsOwnerDrawn() because it can be
     // true because it was set by e.g. SetBitmap(), even if the item wasn't
     // made owner drawn at Windows level.
-    if ( !(info.fState & MF_OWNERDRAW) )
+    if ( !(state & MF_OWNERDRAW) )
 #endif // wxUSE_OWNER_DRAWN
     {
         info.fMask |= MIIM_STRING;
@@ -724,30 +727,27 @@ void wxMenuItem::SetItemLabel(const wxString& txt)
         info.cch = m_text.length();
     }
 
-    if ( !::SetMenuItemInfo(hMenu, itemPos, TRUE, &info) )
+    if ( !::SetMenuItemInfo(hMenu, id, FALSE, &info) )
     {
         wxLogLastError(wxT("SetMenuItemInfo"));
     }
 }
 
-void wxMenuItem::DoSetBitmap(const wxBitmap& bmpNew, bool bChecked)
+void wxMenuItem::DoSetBitmap(const wxBitmap& bmp, bool bChecked)
 {
-    wxBitmap& bmp = bChecked ? m_bmpChecked : m_bmpUnchecked;
-    if ( bmp.IsSameAs(bmpNew) )
-        return;
-
-#if wxUSE_IMAGE
-    if ( !bmpNew.HasAlpha() && wxGetWinVersion() >= wxWinVersion_Vista)
+    if ( bChecked )
     {
-        // we must use PARGB DIB for the menu bitmaps so ensure that we do
-        wxImage img(bmpNew.ConvertToImage());
-        img.InitAlpha();
-        bmp = wxBitmap(img);
+        if ( m_bmpChecked.IsSameAs(bmp) )
+            return;
+
+        m_bmpChecked = bmp;
     }
     else
-#endif // wxUSE_IMAGE
     {
-        bmp = bmpNew;
+        if ( m_bmpUnchecked.IsSameAs(bmp) )
+            return;
+
+        m_bmpUnchecked = bmp;
     }
 
 #if wxUSE_OWNER_DRAWN
@@ -764,16 +764,13 @@ void wxMenuItem::DoSetBitmap(const wxBitmap& bmpNew, bool bChecked)
         if ( m_parentMenu )
         {
             size_t pos;
-            wxMenuItem *item = m_parentMenu->FindChildItem(GetId(), &pos);
+            wxMenuItem *item = m_parentMenu->FindChildItem(GetMSWId(), &pos);
             if ( item )
             {
                 wxCHECK_RET( item == this, wxS("Non unique menu item ID?") );
 
-                // Use a copied value of m_parentMenu because it is
-                // nullified by Remove.
-                wxMenu *menu = m_parentMenu;
-                menu->Remove(this);
-                menu->Insert(pos, this);
+                m_parentMenu->Remove(this);
+                m_parentMenu->Insert(pos, this);
             }
             //else: the item hasn't been inserted into the parent menu yet
         }
@@ -781,13 +778,20 @@ void wxMenuItem::DoSetBitmap(const wxBitmap& bmpNew, bool bChecked)
     }
 #endif // wxUSE_OWNER_DRAWN
 
-    const int itemPos = MSGetMenuItemPos();
-    if ( itemPos == -1 )
-    {
-        // The item is probably not attached to any menu yet. SetBitmap() is
-        // still valid to call in this case, just do nothing else here.
+    // the item can be not attached to any menu yet and SetBitmap() is still
+    // valid to call in this case and should do nothing else
+    if ( !m_parentMenu )
         return;
-    }
+
+    HMENU hMenu = GetHMenuOf(m_parentMenu);
+    if ( !hMenu )
+        return;
+
+    const UINT id = GetMSWId();
+
+    const UINT state = ::GetMenuState(hMenu, id, MF_BYCOMMAND);
+    if ( state == (UINT)-1 )
+        return;
 
     // update the bitmap of the native menu item
     // don't set hbmpItem for the checkable items as it would
@@ -796,16 +800,16 @@ void wxMenuItem::DoSetBitmap(const wxBitmap& bmpNew, bool bChecked)
     if ( IsCheckable() )
     {
         mii.fMask = MIIM_CHECKMARKS;
-        mii.hbmpChecked = GetHBitmapForMenu(Checked);
-        mii.hbmpUnchecked = GetHBitmapForMenu(Unchecked);
+        mii.hbmpChecked = GetHBitmapForMenu(true);
+        mii.hbmpUnchecked = GetHBitmapForMenu(false);
     }
     else
     {
         mii.fMask = MIIM_BITMAP;
-        mii.hbmpItem = GetHBitmapForMenu(Normal);
+        mii.hbmpItem = GetHBitmapForMenu();
     }
 
-    if ( !::SetMenuItemInfo(GetHMenuOf(m_parentMenu), itemPos, TRUE, &mii) )
+    if ( !::SetMenuItemInfo(hMenu, id, FALSE, &mii) )
     {
         wxLogLastError(wxT("SetMenuItemInfo"));
     }
@@ -1341,8 +1345,7 @@ bool wxMenuItem::MSWMustUseOwnerDrawn()
                                 GetFont().IsOk();
 
     // Windows XP or earlier don't display menu bitmaps bigger than
-    // standard size correctly (they're truncated) nor can
-    // checked bitmaps use HBMMENU_CALLBACK, so we must use
+    // standard size correctly (they're truncated), so we must use
     // owner-drawn items to show them correctly there. OTOH Win7
     // doesn't seem to have any problems with even very large bitmaps
     // so don't use owner-drawn items unnecessarily there (Vista wasn't
@@ -1353,8 +1356,7 @@ bool wxMenuItem::MSWMustUseOwnerDrawn()
                         bmpChecked   = GetBitmap(true);
 
         if ( (bmpUnchecked.IsOk() && IsGreaterThanStdSize(bmpUnchecked)) ||
-                (bmpChecked.IsOk()   && IsGreaterThanStdSize(bmpChecked)) ||
-                (bmpChecked.IsOk() && IsCheckable()) )
+                (bmpChecked.IsOk()   && IsGreaterThanStdSize(bmpChecked)) )
         {
             mustUseOwnerDrawn = true;
         }
@@ -1366,7 +1368,7 @@ bool wxMenuItem::MSWMustUseOwnerDrawn()
 #endif // wxUSE_OWNER_DRAWN
 
 // returns the HBITMAP to use in MENUITEMINFO
-HBITMAP wxMenuItem::GetHBitmapForMenu(BitmapKind kind) const
+HBITMAP wxMenuItem::GetHBitmapForMenu(bool checked)
 {
     // Under versions of Windows older than Vista we can't pass HBITMAP
     // directly as hbmpItem for 2 reasons:
@@ -1375,10 +1377,8 @@ HBITMAP wxMenuItem::GetHBitmapForMenu(BitmapKind kind) const
     //  2. Worse, Windows inverts the bitmap for the selected
     //     item and this looks downright ugly
     //
-    // So we prefer to instead draw it ourselves in MSWOnDrawItem() by using
-    // HBMMENU_CALLBACK for normal menu items when inserting it. And use
-    // NULL for checkable menu items as hbmpChecked/hBmpUnchecked does not
-    // support HBMMENU_CALLBACK.
+    // So we prefer to instead draw it ourselves in MSWOnDrawItem().by using
+    // HBMMENU_CALLBACK when inserting it
     //
     // However under Vista using HBMMENU_CALLBACK causes the entire menu to be
     // drawn using the classic theme instead of the current one and it does
@@ -1386,54 +1386,25 @@ HBITMAP wxMenuItem::GetHBitmapForMenu(BitmapKind kind) const
 #if wxUSE_IMAGE
     if ( wxGetWinVersion() >= wxWinVersion_Vista )
     {
-        bool checked = (kind != Unchecked);
         wxBitmap bmp = GetBitmap(checked);
         if ( bmp.IsOk() )
         {
-            return GetHbitmapOf(bmp);
+            // we must use PARGB DIB for the menu bitmaps so ensure that we do
+            wxImage img(bmp.ConvertToImage());
+            if ( !img.HasAlpha() )
+            {
+                img.InitAlpha();
+                SetBitmap(img, checked);
+            }
+
+            return GetHbitmapOf(GetBitmap(checked));
         }
         //else: bitmap is not set
         return NULL;
     }
 #endif // wxUSE_IMAGE
 
-    return (kind == Normal) ? HBMMENU_CALLBACK : NULL;
-}
-
-int wxMenuItem::MSGetMenuItemPos() const
-{
-    if ( !m_parentMenu )
-        return -1;
-
-    const HMENU hMenu = GetHMenuOf(m_parentMenu);
-    if ( !hMenu )
-        return -1;
-
-    const UINT id = GetMSWId();
-    const int menuItems = ::GetMenuItemCount(hMenu);
-    for ( int i = 0; i < menuItems; i++ )
-    {
-        const UINT state = ::GetMenuState(hMenu, i, MF_BYPOSITION);
-        if ( state == (UINT)-1 )
-        {
-            // This indicates that the item at this position and is not
-            // supposed to happen here, but test for it just in case.
-            continue;
-        }
-
-        if ( state & MF_POPUP )
-        {
-            if ( ::GetSubMenu(hMenu, i) == (HMENU)id )
-                return i;
-        }
-        else if ( !(state & MF_SEPARATOR) )
-        {
-            if ( ::GetMenuItemID(hMenu, i) == id )
-                return i;
-        }
-    }
-
-    return -1;
+    return HBMMENU_CALLBACK;
 }
 
 // ----------------------------------------------------------------------------

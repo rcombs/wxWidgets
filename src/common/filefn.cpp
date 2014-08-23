@@ -468,7 +468,7 @@ wxChar *wxCopyAbsolutePath(const wxString& filename)
 template<typename CharType>
 static CharType *wxDoExpandPath(CharType *buf, const wxString& name)
 {
-    CharType *d, *s, *nm;
+    register CharType *d, *s, *nm;
     CharType        lnm[_MAXPATHLEN];
     int             q;
 
@@ -527,9 +527,9 @@ static CharType *wxDoExpandPath(CharType *buf, const wxString& name)
         if (*s++ == wxT('$'))
 #endif
         {
-            CharType  *start = d;
-            int     braces = (*s == wxT('{') || *s == wxT('('));
-            CharType  *value;
+            register CharType  *start = d;
+            register int     braces = (*s == wxT('{') || *s == wxT('('));
+            register CharType  *value;
             while ((*d++ = *s) != 0)
                 if (braces ? (*s == wxT('}') || *s == wxT(')')) : !(wxIsalnum(*s) || *s == wxT('_')) )
                     break;
@@ -568,7 +568,7 @@ static CharType *wxDoExpandPath(CharType *buf, const wxString& name)
             }
         } else
         {                /* ~user/filename */
-            CharType  *nnm;
+            register CharType  *nnm;
             for (s = nm; *s && *s != SEP; s++)
             {
                 // Empty
@@ -1052,7 +1052,7 @@ wxCopyFile (const wxString& file1, const wxString& file2, bool overwrite)
 
     wxDoCopyFile(fileIn, fbuf, file2, overwrite);
 
-#if defined(__WXMAC__)
+#if defined(__WXMAC__) || defined(__WXCOCOA__)
     // copy the resource fork of the file too if it's present
     wxString pathRsrcOut;
     wxFile fileRsrcIn;
@@ -1092,7 +1092,7 @@ wxCopyFile (const wxString& file1, const wxString& file2, bool overwrite)
         if ( !wxDoCopyFile(fileRsrcIn, fbuf, pathRsrcOut, overwrite) )
             return false;
     }
-#endif // wxMac
+#endif // wxMac || wxCocoa
 
     if ( chmod(file2.fn_str(), fbuf.st_mode) != 0 )
     {

@@ -928,7 +928,8 @@ protected:
 typedef wxRibbonMSWArtProvider wxRibbonDefaultArtProvider;
 #elif defined(__WXOSX_CARBON__) || \
       defined(__WXOSX_COCOA__) || \
-      defined(__WXOSX_IPHONE__)
+      defined(__WXOSX_IPHONE__) || \
+      defined(__WXCOCOA__)
 // TODO: Once implemented, change typedef to OSX
 // typedef wxRibbonOSXArtProvider wxRibbonDefaultArtProvider;
 typedef wxRibbonAUIArtProvider wxRibbonDefaultArtProvider;
