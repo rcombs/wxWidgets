@@ -196,28 +196,12 @@ private:
 class WXDLLIMPEXP_BASE wxObjectEventFunctor : public wxEventFunctor
 {
 public:
-    wxObjectEventFunctor(wxObjectEventFunction method, wxEvtHandler *handler)
-        : m_handler( handler ), m_method( method )
-        { }
+    wxObjectEventFunctor(wxObjectEventFunction method, wxEvtHandler *handler);
 
     virtual void operator()(wxEvtHandler *handler, wxEvent& event) wxOVERRIDE;
 
-    virtual bool IsMatching(const wxEventFunctor& functor) const wxOVERRIDE
-    {
-        if ( wxTypeId(functor) == wxTypeId(*this) )
-        {
-            const wxObjectEventFunctor &other =
-                static_cast< const wxObjectEventFunctor & >( functor );
-
-            return ( m_method == other.m_method || !other.m_method ) &&
-                   ( m_handler == other.m_handler || !other.m_handler );
-        }
-        else
-            return false;
-    }
-
-    virtual wxEvtHandler *GetEvtHandler() const wxOVERRIDE
-        { return m_handler; }
+    virtual bool IsMatching(const wxEventFunctor& functor) const wxOVERRIDE;
+    virtual wxEvtHandler *GetEvtHandler() const wxOVERRIDE;
 
 #if 0
     virtual wxEventFunction GetEvtMethod() const wxOVERRIDE
@@ -3725,17 +3709,6 @@ private:
 };
 
 WX_DEFINE_ARRAY_WITH_DECL_PTR(wxEvtHandler *, wxEvtHandlerArray, class WXDLLIMPEXP_BASE);
-
-
-// Define an inline method of wxObjectEventFunctor which couldn't be defined
-// before wxEvtHandler declaration: at least Sun CC refuses to compile function
-// calls through pointer to member for forward-declared classes (see #12452).
-inline void wxObjectEventFunctor::operator()(wxEvtHandler *handler, wxEvent& event)
-{
-    wxEvtHandler * const realHandler = m_handler ? m_handler : handler;
-
-    (realHandler->*m_method)(event);
-}
 
 // ----------------------------------------------------------------------------
 // wxEventConnectionRef represents all connections between two event handlers
