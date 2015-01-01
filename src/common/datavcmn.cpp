@@ -325,6 +325,7 @@ int wxDataViewModel::Compare( const wxDataViewItem &item1, const wxDataViewItem 
         if (res)
             return res;
     }
+#if 0
     else if (value1.GetType() == wxT("long"))
     {
         long l1 = value1.GetLong();
@@ -362,6 +363,7 @@ int wxDataViewModel::Compare( const wxDataViewItem &item1, const wxDataViewItem 
         if (b1 != b2)
             return b1 ? 1 : -1;
     }
+#endif
     else if (value1.GetType() == wxT("wxDataViewIconText"))
     {
         wxDataViewIconText iconText1, iconText2;
@@ -1252,6 +1254,7 @@ wxDataViewCtrlBase::AppendIconTextColumn( const wxString &label, unsigned int mo
             );
 }
 
+#if 0
 wxDataViewColumn *
 wxDataViewCtrlBase::AppendToggleColumn( const wxString &label, unsigned int model_column,
                             wxDataViewCellMode mode, int width, wxAlignment align, int flags )
@@ -1287,6 +1290,7 @@ wxDataViewCtrlBase::AppendBitmapColumn( const wxString &label, unsigned int mode
                 this, label, model_column, mode, width, align, flags
             );
 }
+#endif
 
 wxDataViewColumn *
 wxDataViewCtrlBase::AppendTextColumn( const wxBitmap &label, unsigned int model_column,
@@ -1306,6 +1310,7 @@ wxDataViewCtrlBase::AppendIconTextColumn( const wxBitmap &label, unsigned int mo
             );
 }
 
+#if 0
 wxDataViewColumn *
 wxDataViewCtrlBase::AppendToggleColumn( const wxBitmap &label, unsigned int model_column,
                             wxDataViewCellMode mode, int width, wxAlignment align, int flags )
@@ -1341,6 +1346,7 @@ wxDataViewCtrlBase::AppendBitmapColumn( const wxBitmap &label, unsigned int mode
                 this, label, model_column, mode, width, align, flags
             );
 }
+#endif
 
 wxDataViewColumn *
 wxDataViewCtrlBase::PrependTextColumn( const wxString &label, unsigned int model_column,
@@ -1360,6 +1366,7 @@ wxDataViewCtrlBase::PrependIconTextColumn( const wxString &label, unsigned int m
             );
 }
 
+#if 0
 wxDataViewColumn *
 wxDataViewCtrlBase::PrependToggleColumn( const wxString &label, unsigned int model_column,
                             wxDataViewCellMode mode, int width, wxAlignment align, int flags )
@@ -1395,6 +1402,7 @@ wxDataViewCtrlBase::PrependBitmapColumn( const wxString &label, unsigned int mod
                 this, label, model_column, mode, width, align, flags
             );
 }
+#endif
 
 wxDataViewColumn *
 wxDataViewCtrlBase::PrependTextColumn( const wxBitmap &label, unsigned int model_column,
@@ -1414,6 +1422,7 @@ wxDataViewCtrlBase::PrependIconTextColumn( const wxBitmap &label, unsigned int m
             );
 }
 
+#if 0
 wxDataViewColumn *
 wxDataViewCtrlBase::PrependToggleColumn( const wxBitmap &label, unsigned int model_column,
                             wxDataViewCellMode mode, int width, wxAlignment align, int flags )
@@ -1449,6 +1458,7 @@ wxDataViewCtrlBase::PrependBitmapColumn( const wxBitmap &label, unsigned int mod
                 this, label, model_column, mode, width, align, flags
             );
 }
+#endif
 
 bool
 wxDataViewCtrlBase::AppendColumn( wxDataViewColumn *col )
@@ -1513,6 +1523,7 @@ wxDEFINE_EVENT( wxEVT_DATAVIEW_ITEM_DROP, wxDataViewEvent );
 // wxDataViewSpinRenderer
 // -------------------------------------
 
+#if 0
 wxDataViewSpinRenderer::wxDataViewSpinRenderer( int min, int max, wxDataViewCellMode mode, int alignment ) :
    wxDataViewCustomRenderer(wxT("long"), mode, alignment )
 {
@@ -2610,6 +2621,7 @@ void wxDataViewTreeCtrl::OnSize( wxSizeEvent &event )
 #endif
     event.Skip( true );
 }
+#endif
 
 #endif // wxUSE_DATAVIEWCTRL
 
