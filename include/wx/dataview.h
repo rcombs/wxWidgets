@@ -1100,11 +1100,13 @@ public:
     wxString GetTextValue( unsigned int row, unsigned int col ) const
         { wxVariant value; GetStore()->GetValueByRow( value, row, col ); return value.GetString(); }
 
+#if 0
     void SetToggleValue( bool value, unsigned int row, unsigned int col )
         { GetStore()->SetValueByRow( value, row, col );
           GetStore()->RowValueChanged( row, col); }
     bool GetToggleValue( unsigned int row, unsigned int col ) const
         { wxVariant value; GetStore()->GetValueByRow( value, row, col ); return value.GetBool(); }
+#endif
 
     void SetItemData( const wxDataViewItem& item, wxUIntPtr data )
         { GetStore()->SetItemData( item, data ); }

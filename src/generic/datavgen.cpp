@@ -1113,6 +1113,7 @@ wxSize wxDataViewBitmapRenderer::GetSize() const
 // wxDataViewToggleRenderer
 // ---------------------------------------------------------
 
+#if 0
 IMPLEMENT_ABSTRACT_CLASS(wxDataViewToggleRenderer, wxDataViewRenderer)
 
 wxDataViewToggleRenderer::wxDataViewToggleRenderer( const wxString &varianttype,
@@ -1236,6 +1237,7 @@ wxSize wxDataViewProgressRenderer::GetSize() const
     // behaviour. Keep the height fixed so that the progress bar isn't too fat.
     return wxSize(-1, 12);
 }
+#endif
 
 // ---------------------------------------------------------
 // wxDataViewIconTextRenderer

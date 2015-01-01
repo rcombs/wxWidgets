@@ -163,6 +163,7 @@ public:
     wxAny GetAny() const;
 #endif
 
+#if 0
     // double
     wxVariant(double val, const wxString& name = wxEmptyString);
     bool operator== (double value) const;
@@ -199,6 +200,7 @@ public:
     void operator= (const wxDateTime& value) ;
     inline operator wxDateTime () const { return GetDateTime(); }
     wxDateTime GetDateTime() const;
+#endif
 #endif
 
     // wxString
@@ -249,6 +251,7 @@ public:
     operator wxStdWideString() const { return (operator wxString()).ToStdWstring(); }
 #endif // wxUSE_STD_STRING
 
+#if 0
     // wxUniChar
     wxVariant(const wxUniChar& val, const wxString& name = wxEmptyString);
     wxVariant(const wxUniCharRef& val, const wxString& name = wxEmptyString);
@@ -345,6 +348,7 @@ public:
 
     // Clear list
     void ClearList();
+#endif
 
 public:
     // Type conversion
