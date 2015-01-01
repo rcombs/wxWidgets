@@ -648,6 +648,7 @@ private:
     bool m_isDetached;
 };
 
+#if 0
 // wxThreadHelperThread class
 // --------------------------
 
@@ -769,6 +770,7 @@ inline void *wxThreadHelperThread::Entry()
 
     return result;
 }
+#endif
 
 // ----------------------------------------------------------------------------
 // Automatic initialization
