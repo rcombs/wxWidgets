@@ -229,7 +229,7 @@ public:
     inline operator wxString () const {  return MakeString(); }
     wxString GetString() const;
 
-#if wxUSE_STD_STRING
+#if 0
     wxVariant(const std::string& val, const wxString& name = wxEmptyString);
     bool operator==(const std::string& value) const
         { return operator==(wxString(value)); }
