@@ -346,6 +346,35 @@ wxEventFunctor::~wxEventFunctor()
 {
 }
 
+wxObjectEventFunctor::wxObjectEventFunctor(wxObjectEventFunction method, wxEvtHandler *handler)
+: m_handler( handler ), m_method( method )
+{ }
+
+bool wxObjectEventFunctor::IsMatching(const wxEventFunctor& functor) const
+{
+    if ( wxTypeId(functor) == wxTypeId(*this) )
+    {
+        const wxObjectEventFunctor &other =
+            static_cast< const wxObjectEventFunctor & >( functor );
+
+        return ( m_method == other.m_method || !other.m_method ) &&
+               ( m_handler == other.m_handler || !other.m_handler );
+    }
+    else
+        return false;
+}
+
+wxEvtHandler *wxObjectEventFunctor::GetEvtHandler() const
+    { return m_handler; }
+
+
+void wxObjectEventFunctor::operator()(wxEvtHandler *handler, wxEvent& event)
+{
+    wxEvtHandler * const realHandler = m_handler ? m_handler : handler;
+
+    (realHandler->*m_method)(event);
+}
+
 // ----------------------------------------------------------------------------
 // wxEvent
 // ----------------------------------------------------------------------------
