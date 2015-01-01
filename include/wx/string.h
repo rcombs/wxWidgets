@@ -1204,6 +1204,7 @@ public:
         { assign(str.c_str(), str.length()); }
   #endif
 
+#if 0
   #if !wxUSE_UNICODE // ANSI build
     // FIXME-UTF8: do this in UTF8 build #if wxUSE_UTF8_LOCALE_ONLY, too
     wxString(const std::string& str) : m_impl(str) {}
@@ -1211,6 +1212,7 @@ public:
     wxString(const std::string& str)
         { assign(str.c_str(), str.length()); }
   #endif
+#endif
 #endif // wxUSE_STD_STRING
 
   // Also always provide explicit conversions to std::[w]string in any case,
@@ -1251,7 +1253,7 @@ public:
     }
   #endif
 
-#if wxUSE_STD_STRING_CONV_IN_WXSTRING
+#if 0
     // Implicit conversions to std::[w]string are not provided by default as
     // they conflict with the implicit conversions to "const char/wchar_t *"
     // which we use for backwards compatibility but do provide them if
@@ -1503,8 +1505,10 @@ public:
     // and not defining it in STL build also helps us to get more clear error
     // messages for the code which relies on implicit conversion to char* in
     // STL build
-#if !wxUSE_STD_STRING_CONV_IN_WXSTRING
+#if 0
     operator const char*() const { return c_str(); }
+#endif
+#if !wxUSE_STD_STRING_CONV_IN_WXSTRING
     operator const wchar_t*() const { return c_str(); }
 
     // implicit conversion to untyped pointer for compatibility with previous
