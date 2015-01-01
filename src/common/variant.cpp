@@ -234,6 +234,7 @@ wxAny wxVariant::GetAny() const
 
 #endif // wxUSE_ANY
 
+#if 0
 // -----------------------------------------------------------------
 // wxVariantDataLong
 // -----------------------------------------------------------------
@@ -839,6 +840,8 @@ wxUniChar wxVariant::GetChar() const
     }
 }
 
+#endif
+
 // ----------------------------------------------------------------------------
 // wxVariantDataString
 // ----------------------------------------------------------------------------
@@ -1038,6 +1041,7 @@ wxString wxVariant::GetString() const
 // wxVariantDataWxObjectPtr
 // ----------------------------------------------------------------------------
 
+#if 0
 class wxVariantDataWxObjectPtr: public wxVariantData
 {
 public:
@@ -2385,11 +2389,15 @@ bool wxVariant::Convert(wchar_t* value) const
     return true;
 }
 
+#endif
+
 bool wxVariant::Convert(wxString* value) const
 {
     *value = MakeString();
     return true;
 }
+
+#if 0
 
 #if wxUSE_LONGLONG
 bool wxVariant::Convert(wxLongLong* value) const
@@ -2506,5 +2514,7 @@ bool wxVariant::Convert(wxDateTime* value) const
     return false;
 }
 #endif // wxUSE_DATETIME
+
+#endif
 
 #endif // wxUSE_VARIANT
