@@ -273,31 +273,6 @@ long ObjectToLong(NSObject *object)
     return [(NSNumber *)object longValue];
 }
 
-wxDateTime ObjectToDate(NSObject *object)
-{
-    wxCHECK_MSG( [object isKindOfClass:[NSDate class]], wxInvalidDateTime,
-                 wxString::Format
-                 (
-                    "date expected but got %s",
-                    wxCFStringRef::AsString([object className])
-                 ));
-
-    // get the number of seconds since 1970-01-01 UTC and this is the only
-    // way to convert a double to a wxLongLong
-    const wxLongLong seconds = [((NSDate*) object) timeIntervalSince1970];
-
-    wxDateTime dt(1, wxDateTime::Jan, 1970);
-    dt.Add(wxTimeSpan(0,0,seconds));
-
-    // the user has entered a date in the local timezone but seconds
-    // contains the number of seconds from date in the local timezone
-    // since 1970-01-01 UTC; therefore, the timezone information has to be
-    // transferred to wxWidgets, too:
-    dt.MakeFromTimezone(wxDateTime::UTC);
-
-    return dt;
-}
-
 NSInteger CompareItems(id item1, id item2, void* context)
 {
     NSArray* const sortDescriptors = (NSArray*) context;
@@ -2688,10 +2663,6 @@ wxDataViewRenderer::OSXOnCellChanged(NSObject *object,
     wxVariant value;
     if ( [object isKindOfClass:[NSString class]] )
         value = ObjectToString(object);
-    else if ( [object isKindOfClass:[NSNumber class]] )
-        value = ObjectToLong(object);
-    else if ( [object isKindOfClass:[NSDate class]] )
-        value = ObjectToDate(object);
     else
     {
         wxFAIL_MSG( wxString::Format
@@ -2973,54 +2944,7 @@ wxDataViewDateRenderer::wxDataViewDateRenderer(const wxString& varianttype,
 
 bool wxDataViewDateRenderer::MacRender()
 {
-    if (!GetValue().GetDateTime().IsValid())
-        return true;
-
-    // -- find best fitting style to show the date --
-    // as the style should be identical for all cells a reference date
-    // instead of the actual cell's date value is used for all cells;
-    // this reference date is stored in the renderer's native data
-    // section for speed purposes; otherwise, the reference date's
-    // string has to be recalculated for each item that may become
-    // timewise long if a lot of rows using dates exist; the algorithm
-    // has the preference to display as much information as possible
-    // in the first instance; but as this is often impossible due to
-    // space restrictions the style is shortened per loop; finally, if
-    // the shortest time and date format does not fit into the cell
-    // the time part is dropped; remark: the time part itself is not
-    // modified per iteration loop and only uses the short style,
-    // means that only the hours and minutes are being shown
-
-    // GetObject() returns a date for testing the size of a date object
-    [GetNativeData()->GetItemCell() setObjectValue:GetNativeData()->GetObject()];
-    [[GetNativeData()->GetItemCell() formatter] setTimeStyle:NSDateFormatterShortStyle];
-    for (int dateFormatterStyle=4; dateFormatterStyle>0; --dateFormatterStyle)
-    {
-        [[GetNativeData()->GetItemCell() formatter] setDateStyle:(NSDateFormatterStyle)dateFormatterStyle];
-        if (dateFormatterStyle == 1)
-        {
-            // if the shortest style for displaying the date and time
-            // is too long to be fully visible remove the time part of
-            // the date:
-            if ([GetNativeData()->GetItemCell() cellSize].width > [GetNativeData()->GetColumnPtr() width])
-                [[GetNativeData()->GetItemCell() formatter] setTimeStyle:NSDateFormatterNoStyle];
-            {
-                // basically not necessary as the loop would end anyway
-                // but let's save the last comparison
-                break;
-            }
-        }
-        else if ([GetNativeData()->GetItemCell() cellSize].width <= [GetNativeData()->GetColumnPtr() width])
-            break;
-    }
-    // set data (the style is set by the previous loop); on OSX the
-    // date has to be specified with respect to UTC; in wxWidgets the
-    // date is always entered in the local timezone; so, we have to do
-    // a conversion from the local to UTC timezone when adding the
-    // seconds to 1970-01-01 UTC:
-    [GetNativeData()->GetItemCell() setObjectValue:[NSDate dateWithTimeIntervalSince1970:GetValue().GetDateTime().ToUTC().Subtract(wxDateTime(1,wxDateTime::Jan,1970)).GetSeconds().ToDouble()]];
-
-    return true;
+    return false;
 }
 
 void
@@ -3028,12 +2952,6 @@ wxDataViewDateRenderer::OSXOnCellChanged(NSObject *value,
                                          const wxDataViewItem& item,
                                          unsigned col)
 {
-    wxVariant valueDate(ObjectToDate(value));
-    if ( !Validate(valueDate) )
-        return;
-
-    wxDataViewModel *model = GetOwner()->GetOwner()->GetModel();
-    model->ChangeValue(valueDate, item, col);
 }
 
 wxIMPLEMENT_ABSTRACT_CLASS(wxDataViewDateRenderer, wxDataViewRenderer);
@@ -3109,8 +3027,7 @@ wxDataViewToggleRenderer::wxDataViewToggleRenderer(const wxString& varianttype,
 
 bool wxDataViewToggleRenderer::MacRender()
 {
-    [GetNativeData()->GetItemCell() setIntValue:GetValue().GetLong()];
-    return true;
+    return false;
 }
 
 void
@@ -3118,12 +3035,6 @@ wxDataViewToggleRenderer::OSXOnCellChanged(NSObject *value,
                                            const wxDataViewItem& item,
                                            unsigned col)
 {
-    wxVariant valueToggle(ObjectToBool(value));
-    if ( !Validate(valueToggle) )
-        return;
-
-    wxDataViewModel *model = GetOwner()->GetOwner()->GetModel();
-    model->ChangeValue(valueToggle, item, col);
 }
 
 wxIMPLEMENT_ABSTRACT_CLASS(wxDataViewToggleRenderer, wxDataViewRenderer);
@@ -3150,8 +3061,7 @@ wxDataViewProgressRenderer::wxDataViewProgressRenderer(const wxString& label,
 
 bool wxDataViewProgressRenderer::MacRender()
 {
-    [GetNativeData()->GetItemCell() setIntValue:GetValue().GetLong()];
-    return true;
+    return false;
 }
 
 void
@@ -3159,12 +3069,6 @@ wxDataViewProgressRenderer::OSXOnCellChanged(NSObject *value,
                                              const wxDataViewItem& item,
                                              unsigned col)
 {
-    wxVariant valueProgress(ObjectToLong(value));
-    if ( !Validate(valueProgress) )
-        return;
-
-    wxDataViewModel *model = GetOwner()->GetOwner()->GetModel();
-    model->ChangeValue(valueProgress, item, col);
 }
 
 wxIMPLEMENT_ABSTRACT_CLASS(wxDataViewProgressRenderer, wxDataViewRenderer);
