@@ -1674,7 +1674,7 @@ bool wxDataViewSpinRenderer::GetValue( wxVariant &value ) const
 // wxDataViewChoiceRenderer
 // -------------------------------------
 
-#if defined(wxHAS_GENERIC_DATAVIEWCTRL)
+#if 0
 
 wxDataViewChoiceRenderer::wxDataViewChoiceRenderer( const wxArrayString& choices, wxDataViewCellMode mode, int alignment ) :
    wxDataViewCustomRenderer(wxT("string"), mode, alignment )
@@ -1788,7 +1788,7 @@ bool wxDataViewChoiceByIndexRenderer::GetValue( wxVariant &value ) const
 // wxDataViewDateRenderer
 // ---------------------------------------------------------
 
-#if (defined(wxHAS_GENERIC_DATAVIEWCTRL) || defined(__WXGTK__)) && wxUSE_DATEPICKCTRL
+#if 0
 
 wxDataViewDateRenderer::wxDataViewDateRenderer(const wxString& varianttype,
                                               wxDataViewCellMode mode, int align)
@@ -2069,6 +2069,7 @@ wxDataViewColumn *wxDataViewListCtrl::AppendTextColumn( const wxString &label,
     return ret;
 }
 
+#if 0
 wxDataViewColumn *wxDataViewListCtrl::AppendToggleColumn( const wxString &label,
           wxDataViewCellMode mode, int width, wxAlignment align, int flags )
 {
@@ -2092,6 +2093,7 @@ wxDataViewColumn *wxDataViewListCtrl::AppendProgressColumn( const wxString &labe
 
     return wxDataViewCtrl::AppendColumn( ret ) ? ret : NULL;
 }
+#endif
 
 wxDataViewColumn *wxDataViewListCtrl::AppendIconTextColumn( const wxString &label,
           wxDataViewCellMode mode, int width, wxAlignment align, int flags )
