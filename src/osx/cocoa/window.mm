@@ -98,6 +98,7 @@ NSRect wxOSXGetFrameForControl( wxWindowMac* window , const wxPoint& pos , const
     return wxToNSRect( sv, bounds );
 }
 
+__attribute__((visibility("default")))
 @interface wxNSView : NSView
 {
     BOOL _hasToolTip;    
