@@ -594,22 +594,9 @@ void wxToolBarTool::UpdateImages()
 
     if ( CanBeToggled() )
     {
-        int w = m_bmpNormal.GetScaledWidth();
-        int h = m_bmpNormal.GetScaledHeight();
-        m_alternateBitmap = wxBitmap();
-        m_alternateBitmap.CreateScaled(w, h, -1, m_bmpNormal.GetScaleFactor());
-        wxMemoryDC dc;
-
-        dc.SelectObject(m_alternateBitmap);
-        // This color corresponds to OS X Yosemite's rendering of selected toolbar items
-        // See also http://trac.wxwidgets.org/ticket/16645
-        wxColour grey(0xB9, 0xB9, 0xB9);
-        dc.SetPen(grey);
-        dc.SetBrush(grey);
-        dc.DrawRoundedRectangle( 0, 0, w, h, 3 );
-        dc.DrawBitmap( m_bmpNormal, 0, 0, true );
-        dc.SelectObject( wxNullBitmap );
-
+        m_alternateBitmap = m_bmpNormal;
+        m_bmpNormal = m_bmpNormal.ConvertToImage().ConvertToGreyscale();
+        [(NSButton*) m_controlHandle setImage:m_bmpNormal.GetNSImage()];
         [(NSButton*) m_controlHandle setAlternateImage:m_alternateBitmap.GetNSImage()];
     }
     UpdateToggleImage( CanBeToggled() && IsToggled() );
