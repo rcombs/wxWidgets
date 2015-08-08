@@ -447,7 +447,6 @@ public:
 
 #if wxUSE_BUSYINFO
     void ShowBusyInfo(wxCommandEvent& event);
-    void ShowRichBusyInfo(wxCommandEvent& event);
 #endif // wxUSE_BUSYINFO
 
 #if wxUSE_FINDREPLDLG
@@ -585,7 +584,6 @@ enum
     DIALOGS_ABOUTDLG_FULL,
     DIALOGS_ABOUTDLG_CUSTOM,
     DIALOGS_BUSYINFO,
-    DIALOGS_BUSYINFO_RICH,
     DIALOGS_FIND,
     DIALOGS_REPLACE,
     DIALOGS_REQUEST,

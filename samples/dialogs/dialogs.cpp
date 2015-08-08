@@ -238,7 +238,6 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
 
 #if wxUSE_BUSYINFO
     EVT_MENU(DIALOGS_BUSYINFO,                      MyFrame::ShowBusyInfo)
-    EVT_MENU(DIALOGS_BUSYINFO_RICH,                 MyFrame::ShowRichBusyInfo)
 #endif // wxUSE_BUSYINFO
 
 #if wxUSE_FINDREPLDLG
@@ -484,7 +483,6 @@ bool MyApp::OnInit()
 
     #if wxUSE_BUSYINFO
        info_menu->Append(DIALOGS_BUSYINFO, wxT("&Busy info dialog\tCtrl-B"));
-       info_menu->Append(DIALOGS_BUSYINFO_RICH, wxT("&Rich busy info dialog\tShift-Ctrl-B"));
     #endif // wxUSE_BUSYINFO
 
     #if wxUSE_LOG_DIALOG
@@ -2542,28 +2540,7 @@ void MyFrame::ShowBusyInfo(wxCommandEvent& WXUNUSED(event))
     }
 
     wxSleep(2);
-}
-
-void MyFrame::ShowRichBusyInfo(wxCommandEvent& WXUNUSED(event))
-{
-    wxWindowDisabler disableAll;
-
-    // This is just an example and not an encouragement for printing
-    // synchronously from the main thread.
-    wxBusyInfo info
-        (
-            wxBusyInfoFlags()
-                .Parent(this)
-                .Icon(wxArtProvider::GetIcon(wxART_PRINT,
-                                             wxART_OTHER, wxSize(128, 128)))
-                .Title("<b>Printing your document</b>")
-                .Text("Please wait...")
-                .Foreground(*wxWHITE)
-                .Background(*wxBLACK)
-                .Transparency(4*wxALPHA_OPAQUE/5)
-        );
-
-    wxSleep(5);
+    //wxWakeUpIdle();
 }
 
 #endif // wxUSE_BUSYINFO
