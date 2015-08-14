@@ -663,12 +663,7 @@ void wxAppConsoleBase::CallEventHandler(wxEvtHandler *handler,
 {
     // If the functor holds a method then, for backward compatibility, call
     // HandleEvent():
-    wxEventFunction eventFunction = functor.GetEvtMethod();
-
-    if ( eventFunction )
-        HandleEvent(handler, eventFunction, event);
-    else
-        functor(handler, event);
+    functor(handler, event);
 }
 
 void wxAppConsoleBase::OnUnhandledException()

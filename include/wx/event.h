@@ -183,8 +183,10 @@ public:
     // wxAppConsoleBase::CallEventHandler and ensures that an overwritten
     // wxAppConsoleBase::HandleEvent is still called for functors which hold an
     // wxEventFunction:
+#if 0
     virtual wxEventFunction GetEvtMethod() const
         { return NULL; }
+#endif
 
 private:
     WX_DECLARE_ABSTRACT_TYPEINFO(wxEventFunctor)
@@ -217,8 +219,10 @@ public:
     virtual wxEvtHandler *GetEvtHandler() const wxOVERRIDE
         { return m_handler; }
 
+#if 0
     virtual wxEventFunction GetEvtMethod() const wxOVERRIDE
         { return m_method; }
+#endif
 
 private:
     wxEvtHandler *m_handler;
@@ -390,8 +394,10 @@ public:
     virtual wxEvtHandler *GetEvtHandler() const
         { return this->ConvertToEvtHandler(m_handler); }
 
+#if 0
     virtual wxEventFunction GetEvtMethod() const
         { return this->ConvertToEvtMethod(m_method); }
+#endif
 
 private:
     EventHandler *m_handler;
