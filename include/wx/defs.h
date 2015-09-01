@@ -276,6 +276,14 @@ typedef short int WXTYPE;
     #define wxOVERRIDE
 #endif /*  HAVE_OVERRIDE/!HAVE_EXPLICIT */
 
+#ifdef __clang__
+#define wxMAYBE_OVERRIDE _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Winconsistent-missing-override\"")
+#define wxMAYBE_OVERRIDE_END _Pragma("GCC diagnostic pop")
+#else
+#define wxMAYBE_OVERRIDE
+#define wxMAYBE_OVERRIDE_END
+#endif
+
 /* wxFALLTHROUGH is used to notate explicit fallthroughs in switch statements */
 
 #if __cplusplus >= 201103L && defined(__has_warning)
