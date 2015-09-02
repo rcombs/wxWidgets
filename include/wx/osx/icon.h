@@ -58,8 +58,8 @@ public:
 #endif
     
 protected:
-    virtual wxGDIRefData *CreateGDIRefData() const;
-    virtual wxGDIRefData *CloneGDIRefData(const wxGDIRefData *data) const;
+    virtual wxGDIRefData *CreateGDIRefData() const wxOVERRIDE;
+    virtual wxGDIRefData *CloneGDIRefData(const wxGDIRefData *data) const wxOVERRIDE;
 
 private:
     wxDECLARE_DYNAMIC_CLASS(wxIcon);
@@ -84,7 +84,7 @@ public:
                           const wxString& name,
                           wxBitmapType flags,
                           int desiredWidth = -1,
-                          int desiredHeight = -1);
+                          int desiredHeight = -1) wxOVERRIDE;
 
     // unhide the base class virtual
     virtual bool LoadFile(wxBitmap *bitmap,

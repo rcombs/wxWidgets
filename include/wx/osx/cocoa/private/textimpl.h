@@ -27,25 +27,25 @@ public :
     wxNSTextFieldControl( wxWindow *wxPeer, wxTextEntry *entry, WXWidget w );
     virtual ~wxNSTextFieldControl();
 
-    virtual bool CanClipMaxLength() const { return true; }
-    virtual void SetMaxLength(unsigned long len);
+    virtual bool CanClipMaxLength() const wxOVERRIDE { return true; }
+    virtual void SetMaxLength(unsigned long len) wxOVERRIDE;
         
-    virtual wxString GetStringValue() const ;
-    virtual void SetStringValue( const wxString &str) ;
-    virtual void Copy() ;
-    virtual void Cut() ;
-    virtual void Paste() ;
-    virtual bool CanPaste() const ;
-    virtual void SetEditable(bool editable) ;
-    virtual void GetSelection( long* from, long* to) const ;
-    virtual void SetSelection( long from , long to );
-    virtual void WriteText(const wxString& str) ;
-    virtual bool HasOwnContextMenu() const { return true; }
-    virtual bool SetHint(const wxString& hint);
+    virtual wxString GetStringValue() const wxOVERRIDE ;
+    virtual void SetStringValue( const wxString &str) wxOVERRIDE ;
+    virtual void Copy() wxOVERRIDE ;
+    virtual void Cut() wxOVERRIDE ;
+    virtual void Paste() wxOVERRIDE ;
+    virtual bool CanPaste() const wxOVERRIDE ;
+    virtual void SetEditable(bool editable) wxOVERRIDE ;
+    virtual void GetSelection( long* from, long* to) const wxOVERRIDE ;
+    virtual void SetSelection( long from , long to ) wxOVERRIDE;
+    virtual void WriteText(const wxString& str) wxOVERRIDE ;
+    virtual bool HasOwnContextMenu() const wxOVERRIDE { return true; }
+    virtual bool SetHint(const wxString& hint) wxOVERRIDE;
 
-    virtual void controlAction(WXWidget slf, void* _cmd, void *sender);
-    virtual bool becomeFirstResponder(WXWidget slf, void *_cmd);
-    virtual bool resignFirstResponder(WXWidget slf, void *_cmd);
+    virtual void controlAction(WXWidget slf, void* _cmd, void *sender) wxOVERRIDE;
+    virtual bool becomeFirstResponder(WXWidget slf, void *_cmd) wxOVERRIDE;
+    virtual bool resignFirstResponder(WXWidget slf, void *_cmd) wxOVERRIDE;
 
     virtual void SetInternalSelection( long from , long to );
     virtual void UpdateInternalSelectionFromEditor( wxNSTextFieldEditor* editor);
@@ -65,29 +65,29 @@ public:
     wxNSTextViewControl( wxTextCtrl *wxPeer, WXWidget w );
     virtual ~wxNSTextViewControl();
 
-    virtual void insertText(NSString* text, WXWidget slf, void *_cmd);
+    virtual void insertText(NSString* text, WXWidget slf, void *_cmd) wxOVERRIDE;
     
-    virtual wxString GetStringValue() const ;
-    virtual void SetStringValue( const wxString &str) ;
-    virtual void Copy() ;
-    virtual void Cut() ;
-    virtual void Paste() ;
-    virtual bool CanPaste() const ;
-    virtual void SetEditable(bool editable) ;
-    virtual void GetSelection( long* from, long* to) const ;
-    virtual void SetSelection( long from , long to );
-    virtual void WriteText(const wxString& str) ;
-    virtual void SetFont( const wxFont & font , const wxColour& foreground , long windowStyle, bool ignoreBlack = true );
+    virtual wxString GetStringValue() const wxOVERRIDE ;
+    virtual void SetStringValue( const wxString &str) wxOVERRIDE ;
+    virtual void Copy() wxOVERRIDE ;
+    virtual void Cut() wxOVERRIDE ;
+    virtual void Paste() wxOVERRIDE ;
+    virtual bool CanPaste() const wxOVERRIDE ;
+    virtual void SetEditable(bool editable) wxOVERRIDE ;
+    virtual void GetSelection( long* from, long* to) const wxOVERRIDE ;
+    virtual void SetSelection( long from , long to ) wxOVERRIDE;
+    virtual void WriteText(const wxString& str) wxOVERRIDE ;
+    virtual void SetFont( const wxFont & font , const wxColour& foreground , long windowStyle, bool ignoreBlack = true ) wxOVERRIDE;
 
-    virtual bool GetStyle(long position, wxTextAttr& style);
-    virtual void SetStyle(long start, long end, const wxTextAttr& style);
+    virtual bool GetStyle(long position, wxTextAttr& style) wxOVERRIDE;
+    virtual void SetStyle(long start, long end, const wxTextAttr& style) wxOVERRIDE;
 
-    virtual bool CanFocus() const;
+    virtual bool CanFocus() const wxOVERRIDE;
 
-    virtual bool HasOwnContextMenu() const { return true; }
+    virtual bool HasOwnContextMenu() const wxOVERRIDE { return true; }
 
-    virtual void CheckSpelling(bool check);
-    virtual wxSize GetBestSize() const;
+    virtual void CheckSpelling(bool check) wxOVERRIDE;
+    virtual wxSize GetBestSize() const wxOVERRIDE;
 
 protected:
     NSScrollView* m_scrollView;
@@ -100,25 +100,25 @@ public :
     wxNSComboBoxControl( wxComboBox *wxPeer, WXWidget w );
     virtual ~wxNSComboBoxControl();
 
-    virtual int GetSelectedItem() const;
-    virtual void SetSelectedItem(int item);
+    virtual int GetSelectedItem() const wxOVERRIDE;
+    virtual void SetSelectedItem(int item) wxOVERRIDE;
 
-    virtual int GetNumberOfItems() const;
+    virtual int GetNumberOfItems() const wxOVERRIDE;
 
-    virtual void InsertItem(int pos, const wxString& item);
-    virtual void RemoveItem(int pos);
+    virtual void InsertItem(int pos, const wxString& item) wxOVERRIDE;
+    virtual void RemoveItem(int pos) wxOVERRIDE;
 
-    virtual void Clear();
+    virtual void Clear() wxOVERRIDE;
 
-    virtual wxString GetStringAtIndex(int pos) const;
+    virtual wxString GetStringAtIndex(int pos) const wxOVERRIDE;
 
-    virtual int FindString(const wxString& text) const;
-    virtual void Popup();
-    virtual void Dismiss();
+    virtual int FindString(const wxString& text) const wxOVERRIDE;
+    virtual void Popup() wxOVERRIDE;
+    virtual void Dismiss() wxOVERRIDE;
 
-    virtual void SetEditable(bool editable);
+    virtual void SetEditable(bool editable) wxOVERRIDE;
 
-    virtual void mouseEvent(WX_NSEvent event, WXWidget slf, void *_cmd);
+    virtual void mouseEvent(WX_NSEvent event, WXWidget slf, void *_cmd) wxOVERRIDE;
 
 private:
     NSComboBox* m_comboBox;

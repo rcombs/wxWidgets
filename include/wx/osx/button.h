@@ -40,13 +40,13 @@ public:
                 const wxValidator& validator = wxDefaultValidator,
                 const wxString& name = wxButtonNameStr);
 
-    virtual void SetLabel(const wxString& label);
-    virtual wxWindow *SetDefault();
-    virtual void Command(wxCommandEvent& event);
+    virtual void SetLabel(const wxString& label) wxOVERRIDE;
+    virtual wxWindow *SetDefault() wxOVERRIDE;
+    virtual void Command(wxCommandEvent& event) wxOVERRIDE;
 
     // osx specific event handling common for all osx-ports
 
-    virtual bool        OSXHandleClicked( double timestampsec );
+    virtual bool        OSXHandleClicked( double timestampsec ) wxOVERRIDE;
 
 #if wxOSX_USE_COCOA
     void OSXUpdateAfterLabelChange(const wxString& label);
@@ -86,10 +86,10 @@ public:
 
     // osx specific event handling common for all osx-ports
 
-    virtual bool        OSXHandleClicked( double timestampsec );
+    virtual bool        OSXHandleClicked( double timestampsec ) wxOVERRIDE;
 
 protected:
-    virtual wxSize DoGetBestSize() const ;
+    virtual wxSize DoGetBestSize() const wxOVERRIDE ;
 };
 
 #endif // _WX_OSX_BUTTON_H_

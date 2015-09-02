@@ -40,7 +40,7 @@ public:
 
 protected:
 
-    virtual wxSize DoGetBestSize() const;
+    virtual wxSize DoGetBestSize() const wxOVERRIDE;
 
     wxDECLARE_DYNAMIC_CLASS(wxBitmapButton);
 };

@@ -93,7 +93,7 @@ public:
     }
 
 private:
-    virtual void DoDisable()
+    virtual void DoDisable() wxOVERRIDE
     {
         m_dispatcher.UnregisterFD(m_fd);
     }
@@ -122,7 +122,7 @@ public:
     }
 
 private:
-    virtual void DoDisable()
+    virtual void DoDisable() wxOVERRIDE
     {
         delete m_source;
         m_source = NULL;

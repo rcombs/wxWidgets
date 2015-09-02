@@ -34,17 +34,17 @@ public:
            const wxString& name = wxStaticTextNameStr);
 
   // accessors
-  void SetLabel( const wxString &str ) ;
-  bool SetFont( const wxFont &font );
+  void SetLabel( const wxString &str ) wxOVERRIDE ;
+  bool SetFont( const wxFont &font ) wxOVERRIDE;
 
-    virtual bool AcceptsFocus() const { return false; }
+    virtual bool AcceptsFocus() const wxOVERRIDE { return false; }
 
 protected :
 
-    virtual wxString DoGetLabel() const;
-    virtual void DoSetLabel(const wxString& str);
+    virtual wxString DoGetLabel() const wxOVERRIDE;
+    virtual void DoSetLabel(const wxString& str) wxOVERRIDE;
 
-  virtual wxSize DoGetBestSize() const ;
+  virtual wxSize DoGetBestSize() const wxOVERRIDE ;
 
 #if wxUSE_MARKUP && wxOSX_USE_COCOA
     virtual bool DoSetLabelMarkup(const wxString& markup);

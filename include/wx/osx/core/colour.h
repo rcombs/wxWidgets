@@ -29,12 +29,12 @@ public:
     // default copy ctor and dtor are ok
 
     // accessors
-    virtual bool IsOk() const { return m_cgColour != NULL; }
+    virtual bool IsOk() const wxOVERRIDE { return m_cgColour != NULL; }
 
-    virtual WXDLLIMPEXP_INLINE_CORE ChannelType Red() const { return m_red; }
-    virtual WXDLLIMPEXP_INLINE_CORE ChannelType Green() const { return m_green; }
-    virtual WXDLLIMPEXP_INLINE_CORE ChannelType Blue() const { return m_blue; }
-    virtual WXDLLIMPEXP_INLINE_CORE ChannelType Alpha() const { return m_alpha; }
+    virtual WXDLLIMPEXP_INLINE_CORE ChannelType Red() const wxOVERRIDE { return m_red; }
+    virtual WXDLLIMPEXP_INLINE_CORE ChannelType Green() const wxOVERRIDE { return m_green; }
+    virtual WXDLLIMPEXP_INLINE_CORE ChannelType Blue() const wxOVERRIDE { return m_blue; }
+    virtual WXDLLIMPEXP_INLINE_CORE ChannelType Alpha() const wxOVERRIDE { return m_alpha; }
 
     // comparison
     bool operator == (const wxColour& colour) const;
@@ -66,7 +66,7 @@ public:
 
 protected :
     virtual void
-    InitRGBA(ChannelType r, ChannelType g, ChannelType b, ChannelType a);
+    InitRGBA(ChannelType r, ChannelType g, ChannelType b, ChannelType a) wxOVERRIDE;
 #if wxOSX_USE_COCOA_OR_CARBON
     void InitRGBColor( const RGBColor& col );
 #endif

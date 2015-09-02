@@ -50,7 +50,7 @@ public:
         : wxFontDialogBase(parent, data) { Init(); }
     virtual ~wxGenericFontDialog();
 
-    virtual int ShowModal();
+    virtual int ShowModal() wxOVERRIDE;
 
     // Internal functions
     void OnCloseWindow(wxCloseEvent& event);
@@ -66,7 +66,7 @@ public:
 
 protected:
 
-    virtual bool DoCreate(wxWindow *parent);
+    virtual bool DoCreate(wxWindow *parent) wxOVERRIDE;
 
 private:
 

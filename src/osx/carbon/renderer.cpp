@@ -129,7 +129,7 @@ public:
                            const wxRect& rect,
                            int value,
                            int max,
-                           int flags = 0);
+                           int flags = 0) wxOVERRIDE;
 
     virtual wxSplitterRenderParams GetSplitterParams(const wxWindow *win) wxOVERRIDE;
 

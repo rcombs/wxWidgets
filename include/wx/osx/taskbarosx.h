@@ -30,9 +30,9 @@ public:
     bool IsOk() const { return true; }
 
     bool IsIconInstalled() const;
-    bool SetIcon(const wxIcon& icon, const wxString& tooltip = wxEmptyString);
-    bool RemoveIcon();
-    bool PopupMenu(wxMenu *menu);
+    bool SetIcon(const wxIcon& icon, const wxString& tooltip = wxEmptyString) wxOVERRIDE;
+    bool RemoveIcon() wxOVERRIDE;
+    bool PopupMenu(wxMenu *menu) wxOVERRIDE;
 
 protected:
     wxTaskBarIconType m_type;

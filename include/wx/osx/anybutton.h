@@ -18,19 +18,19 @@ public:
 
     static wxSize GetDefaultSize();
 
-    virtual void SetLabel(const wxString& label);
+    virtual void SetLabel(const wxString& label) wxOVERRIDE;
 
 protected:
-    virtual wxSize DoGetBestSize() const ;
+    virtual wxSize DoGetBestSize() const wxOVERRIDE ;
 
     void OnEnterWindow( wxMouseEvent& event);
     void OnLeaveWindow( wxMouseEvent& event);
 
-    virtual wxBitmap DoGetBitmap(State which) const;
-    virtual void DoSetBitmap(const wxBitmap& bitmap, State which);
-    virtual void DoSetBitmapPosition(wxDirection dir);
+    virtual wxBitmap DoGetBitmap(State which) const wxOVERRIDE;
+    virtual void DoSetBitmap(const wxBitmap& bitmap, State which) wxOVERRIDE;
+    virtual void DoSetBitmapPosition(wxDirection dir) wxOVERRIDE;
 
-    virtual void DoSetBitmapMargins(int x, int y)
+    virtual void DoSetBitmapMargins(int x, int y) wxOVERRIDE
     {
         m_marginX = x;
         m_marginY = y;

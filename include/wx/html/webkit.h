@@ -87,9 +87,9 @@ public:
     int GetScrollPos();
 
     // don't hide base class virtuals
-    virtual void SetScrollPos( int orient, int pos, bool refresh = true )
+    virtual void SetScrollPos( int orient, int pos, bool refresh = true ) wxOVERRIDE
         { return wxControl::SetScrollPos(orient, pos, refresh); }
-    virtual int GetScrollPos( int orient ) const
+    virtual int GetScrollPos( int orient ) const wxOVERRIDE
         { return wxControl::GetScrollPos(orient); }
 
     //we need to resize the webview when the control size changes
@@ -98,7 +98,7 @@ public:
     void OnMouseEvents(wxMouseEvent &event);
 protected:
     wxDECLARE_EVENT_TABLE();
-    void MacVisibilityChanged();
+    void MacVisibilityChanged() wxOVERRIDE;
 
 private:
     wxWindow *m_parent;
@@ -151,7 +151,7 @@ public:
     int GetNavigationType() { return m_navType; }
 
     wxWebKitBeforeLoadEvent( wxWindow* win = NULL );
-    wxEvent *Clone(void) const { return new wxWebKitBeforeLoadEvent(*this); }
+    wxEvent *Clone(void) const wxOVERRIDE { return new wxWebKitBeforeLoadEvent(*this); }
 
 protected:
     bool m_cancelled;
@@ -170,7 +170,7 @@ public:
     void SetURL(const wxString& url) { m_url = url; }
 
     wxWebKitStateChangedEvent( wxWindow* win = NULL );
-    wxEvent *Clone(void) const { return new wxWebKitStateChangedEvent(*this); }
+    wxEvent *Clone(void) const wxOVERRIDE { return new wxWebKitStateChangedEvent(*this); }
 
 protected:
     int m_state;
@@ -188,7 +188,7 @@ public:
     void SetTargetName(const wxString& name) { m_targetName = name; }
 
     wxWebKitNewWindowEvent( wxWindow* win = (wxWindow*)(NULL));
-    wxEvent *Clone(void) const { return new wxWebKitNewWindowEvent(*this); }
+    wxEvent *Clone(void) const wxOVERRIDE { return new wxWebKitNewWindowEvent(*this); }
 
 private:
     wxString m_url;
