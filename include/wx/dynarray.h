@@ -108,6 +108,13 @@ private:
     CMPFUNC m_f;
 };
 
+#ifdef HAVE_RVALUE_REFERENCES
+#define _WX_BASEARRAY_MOVE_CONSTRUCTOR(T, name) \
+    name(name&& a) wxNOEXCEPT : std::vector<T>(std::move(a)) { }
+#else
+#define _WX_BASEARRAY_MOVE_CONSTRUCTOR(T, name)
+#endif
+
 #define  _WX_DECLARE_BASEARRAY(T, name, classexp)                   \
    typedef int (wxCMPFUNC_CONV *CMPFUN##name)(T pItem1, T pItem2);  \
    typedef wxSortedArray_SortFunction<T, CMPFUN##name> name##_Predicate; \
@@ -129,6 +136,7 @@ public:                                                             \
   name(size_type n, const_reference v) : std::vector<T>(n, v) { }   \
   template <class InputIterator>                                    \
   name(InputIterator first, InputIterator last) : std::vector<T>(first, last) { } \
+  _WX_BASEARRAY_MOVE_CONSTRUCTOR(T, name)                           \
                                                                     \
   void Empty() { clear(); }                                         \
   void Clear() { clear(); }                                         \

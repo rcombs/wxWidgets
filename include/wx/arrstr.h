@@ -72,6 +72,10 @@ public:
     wxArrayString(size_t sz, const wchar_t** a);
     wxArrayString(size_t sz, const wxString* a);
 
+#ifdef HAVE_RVALUE_REFERENCES
+    wxArrayString(wxArrayString&& a) wxNOEXCEPT : wxArrayStringBase(std::move(a)) { }
+#endif
+
     int Index(const wxString& str, bool bCase = true, bool bFromEnd = false) const;
 
     void Sort(bool reverseOrder = false);
