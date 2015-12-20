@@ -1127,8 +1127,7 @@ public:
     { assign(nRepeat, ch); }
 
     // ctors from char* strings:
-  wxString(const char *psz)
-    : m_impl(ImplStr(psz)) {}
+  wxString(const char *psz) : m_impl(psz, psz + strlen(psz)) { }
   wxString(const char *psz, const wxMBConv& conv)
     : m_impl(ImplStr(psz, conv)) {}
   wxString(const char *psz, size_t nLength)
