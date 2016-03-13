@@ -265,12 +265,5 @@ void wxDrawLine(HDC hdc, int x1, int y1, int x2, int y2)
 
 extern bool wxEnableFileNameAutoComplete(HWND hwnd)
 {
-    HRESULT hr = ::SHAutoComplete(hwnd, 0x10 /* SHACF_FILESYS_ONLY */);
-    if ( FAILED(hr) )
-    {
-        wxLogApiError(wxT("SHAutoComplete"), hr);
-        return false;
-    }
-
-    return true;
+    return false;
 }

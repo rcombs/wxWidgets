@@ -778,31 +778,7 @@ void wxTextEntry::GetSelection(long *from, long *to) const
 
 bool wxTextEntry::DoAutoCompleteFileNames(int flags)
 {
-    DWORD dwFlags = 0;
-    if ( flags & wxFILE )
-        dwFlags |= SHACF_FILESYS_ONLY;
-    else if ( flags & wxDIR )
-        dwFlags |= SHACF_FILESYS_DIRS;
-    else
-    {
-        wxFAIL_MSG(wxS("No flags for file name auto completion?"));
-        return false;
-    }
-
-    HRESULT hr = ::SHAutoComplete(GetEditHwnd(), dwFlags);
-    if ( FAILED(hr) )
-    {
-        wxLogApiError(wxT("SHAutoComplete()"), hr);
-
-        return false;
-    }
-
-    // Disable the other kinds of completion now that we use the built-in file
-    // names completion.
-    if ( m_autoCompleteData )
-        m_autoCompleteData->DisableCompletion();
-
-    return true;
+    return false;
 }
 
 #endif // wxUSE_DYNLIB_CLASS
