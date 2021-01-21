@@ -1898,7 +1898,6 @@ public:
     return *this;
   }
 
-#if HAVE_RVALUE_REFERENCES
   wxString& operator=(wxString&& stringSrc) wxNOEXCEPT
   {
     if ( this != &stringSrc )
@@ -1910,7 +1909,6 @@ public:
 
     return *this;
   }
-#endif
 
   wxString& operator=(const wxCStrData& cstr)
     { return *this = cstr.AsString(); }
