@@ -1156,10 +1156,8 @@ public:
     // copy ctor
   wxString(const wxString& stringSrc) : m_impl(stringSrc.m_impl) { }
 
-#ifdef HAVE_RVALUE_REFERENCES
     // move ctor
   wxString(wxString&& stringSrc) wxNOEXCEPT : m_impl(std::move(stringSrc.m_impl)) { }
-#endif
 
     // string containing nRepeat copies of ch
   wxString(wxUniChar ch, size_t nRepeat = 1 )
